@@ -1,7 +1,8 @@
 module CardConnectGateway
   module Authorization
     class Request
-      def initialize(rest_response)
+      def initialize(options={})
+        # todo - set attributes from options, validate things
       end
     end
   end
