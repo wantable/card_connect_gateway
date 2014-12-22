@@ -4,8 +4,7 @@ module CardConnectGateway
   module Authorization
     def self.new(options={})
       request = Request.new(options)
-      rest_response = {} # todo - send request through restclient
-      response = Response.new(rest_response)
+      response = Response.new(request.send)
     end
   end
 end

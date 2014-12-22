@@ -1,3 +1,5 @@
+require 'rest_client'
+require 'json'
 module CardConnectGateway
   class BaseRequest
     Y = 'Y'
@@ -54,8 +56,26 @@ module CardConnectGateway
     def to_hash
       self.class.attributes.keys.inject({}) do |hash, key|
         value = get_value(key)
-        hash[:value] = value if value
+        hash[key] = value if value
         hash
+      end
+    end
+
+    def send
+      url = "https://#{CardConnectGateway.configuration.user_id}:#{CardConnectGateway.configuration.password}@"
+      url += "#{CardConnectGateway.configuration.url.gsub("http://","").gsub("https://","")}/#{self.class.name.downcase.split("::")[1]}"
+
+      puts "sending PUT request to #{url}\r\nwith content\r\n#{to_hash.inspect}" if CardConnectGateway.configuration.debug
+      
+      req = RestClient.put(url, self.to_hash.to_json, :headers => { :accept => :json, :content_type => :json })
+      
+      begin
+        response = req.execute
+        puts "success: #{response}" if CardConnectGateway.configuration.debug
+        response
+      rescue => e
+        puts "error: #{e}"  if CardConnectGateway.configuration.debug
+        e
       end
     end
 

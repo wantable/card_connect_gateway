@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe "Authorization" do
-  response = CardConnectGateway.authorization()
-  it { expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) }
-
   it 'request validates' do 
     request = CardConnectGateway::Authorization::Request.new({
       account: '411111111111111',
@@ -33,6 +30,16 @@ describe "Authorization" do
     expect(request.errors[:account]).to eq('is required.')
     expect(request.errors[:tokenize]).to eq('must be one of Y, N.')
     expect(request.errors[:expiry]).to eq("doesn't match the format.")
-    
   end
+
+
+  
+  it 'auth successfully' do
+    response = CardConnectGateway.authorization({
+      account: '411111111111111',
+      expiry: '0921'
+    })
+    expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+  end
+
 end
