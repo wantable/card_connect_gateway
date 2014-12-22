@@ -1,31 +1,35 @@
 module CardConnectGateway
   module Authorization
-    class Request
+    class Request < BaseRequest
       PPAL = 'PPAL'
       PAID = 'PAID', 
       GIFT= 'GIFT'
       PDEBIT = 'PDEBIT'
       USD = 'USD'
-      ACCTYPE_OPTIONS = [PPAL, PAID, GIFT, PDEBIT]
+      US = 'US'
+      TELEPHONE = 'T' 
+      RECURRING = 'R'
+      ECOMMERCE = 'E'
+
+
+      attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture
 
       def self.attributes 
         {
           merchid: { 
             required: true, 
-            maxLength: 12,
-            default: CardConnectGateway.config.merchant_id
+            maxLength: 12
           }, 
           accttype: {
-            required: false,
-            options: ACCTYPE_OPTIONS
+            options: [PPAL, PAID, GIFT, PDEBIT]
           }, 
           account: {
-            required: true
-            maxLength: 19,
+            required: true,
+            maxLength: 19
           },
           expiry: {
             required: true,
-            format: /^0[1-9]|1[012](19|20)\d\d$/ ## MMYY (YYYYMMDD is also valid but I'm only going to support the MMYY here)
+            format: /^(0[1-9]|1[012])(\d{2})$/ ## MMYY (YYYYMMDD is also valid but I'm only going to support the MMYY here)
           }, 
           amount: {
             required: true,
@@ -36,38 +40,72 @@ module CardConnectGateway
             required: true,
             default: USD
           },
-          :name, :address, :city, :region, :country, :phone, :postal, 
-        :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture}
+          name: {
+            maxLength: 30
+          },
+          address: {
+            maxLength: 30
+          }, 
+          city: {
+            maxLength: 30
+          }, 
+          region: {
+            maxLength: 20
+          }, 
+          country: {
+            maxLength: 2,
+            default: US
+          }, 
+          phone: {
+            maxLength: 15
+          }, 
+          postal: { 
+            maxLength: 9
+          }, 
+          email: {
+            maxLength: 30
+          }, 
+          ecomind: {
+            maxLength: 1,
+            default: ECOMMERCE
+          }, 
+          cvv2: {
+            maxLength: 4
+          }, 
+          orderid: {
+            maxLength: 19
+          }, 
+          track: {
+            maxLength: 76
+          }, 
+          bankaba: {
+            maxLength: 9
+          }, 
+          tokenize: {
+            maxLength: 1,
+            default: Y,
+            options: [Y, N]
+          }, 
+          termid: {
+            maxLength: 30
+          }, 
+          capture: {
+            maxLength: 1,
+            options: [Y, N],
+            default: N
+          }
+        }
       end
 
       def initialize(options={})
-        # todo - set attributes from options, validate things
-
-        options.each do |key, value|
-          send("@#{key}=", value.to_s)
+        if !options[:expiry] and month = options.delete(:expiry_month) and year = options.delete(:expiry_year)
+          options[:expiry] = "#{sprintf('%02d', month.to_i)}#{sprintf('%02d', year.to_i)}"
         end
+        options[:merchid] ||= CardConnectGateway.configuration.merchant_id
+
+        super(options)
       end
 
-      def validate
-
-        if format
-
-      end
-
-      def valid?
-
-      end
-
-      def errors
-        @errors || {}
-      end
-
-      def to_hash
-        self.class.attributes.keys.inject({}) do |hash, value|
-          hash[:value] = send("@#{value}")
-          hash
-        end
-      end
     end
   end
 end
