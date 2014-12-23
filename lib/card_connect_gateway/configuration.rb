@@ -1,6 +1,6 @@
 module CardConnectGateway
   class Configuration
-    TEST_URL = 'fts.prinpay.com:6443'
+    TEST_URL = 'fts.prinpay.com:6443/cardconnect/rest'
     PRODUCTION_URL = '' # TODO
 
     attr_accessor :merchant_id, :user_id, :password, :test_mode, :url, :debug

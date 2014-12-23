@@ -1,7 +1,6 @@
 require 'rest_client'
-require 'json'
 module CardConnectGateway
-  class BaseRequest < Base
+  class BaseResponse < Base
     def validate
       @errors = {}
       self.class.attributes.each do |key, validations|

@@ -11,8 +11,12 @@ module CardConnectGateway
       RECURRING = 'R'
       ECOMMERCE = 'E'
 
-
       attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture
+
+
+      def self.resource_name
+        'auth'
+      end
 
       def self.attributes 
         {

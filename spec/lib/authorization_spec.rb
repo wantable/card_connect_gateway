@@ -20,8 +20,8 @@ describe "Authorization" do
       expiry_year: 10
     })
     expect(request.expiry).to eq('0910') 
-    expect(request.validate).to eq(true)
     expect(request.errors).to eq({})
+    expect(request.validate).to eq(true)
   end
 
   it 'fail validation' do
@@ -33,13 +33,24 @@ describe "Authorization" do
   end
 
 
-  
+  it 'fail validation from auth' do
+    request = CardConnectGateway.authorization({tokenize: 'A', expiry: 'asdf'})
+
+    expect(request.errors[:account]).to eq('is required.')
+    expect(request.errors[:tokenize]).to eq('must be one of Y, N.')
+    expect(request.errors[:expiry]).to eq("doesn't match the format.")
+    
+    expect(request.class.name).to eq(CardConnectGateway::Authorization::Request.name) 
+  end
+
   it 'auth successfully' do
     response = CardConnectGateway.authorization({
       account: '411111111111111',
       expiry: '0921'
     })
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(response.errors).to eq({}) 
+    expect(response.valid?).to eq(true)
   end
 
 end
