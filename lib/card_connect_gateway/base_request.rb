@@ -54,7 +54,7 @@ module CardConnectGateway
       
       begin
         response = RestClient.put(url, self.to_hash.to_json, :content_type => :json, :accept => :json)
-        puts "success: #{response}" if CardConnectGateway.configuration.debug
+        puts "response: #{response}" if CardConnectGateway.configuration.debug
         response
       rescue => e
         puts "error: #{e}"  if CardConnectGateway.configuration.debug

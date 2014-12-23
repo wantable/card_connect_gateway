@@ -3,6 +3,8 @@ Bundler.setup
 
 require 'card_connect_gateway'
 
+TEST_SUCCESS_CARD = '4444333322221111'
+
 CardConnectGateway.configure do |config|
   config.test_mode = true
   config.merchant_id = ENV["CARD_CONNECT_MERCHANT_ID"] || 'merchant_id'

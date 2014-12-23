@@ -3,10 +3,10 @@ require 'spec_helper'
 describe "Authorization" do
   it 'request validates' do 
     request = CardConnectGateway::Authorization::Request.new({
-      account: '411111111111111',
+      account: TEST_SUCCESS_CARD,
       expiry: '0921'
     })
-    expect(request.account).to eq('411111111111111')
+    expect(request.account).to eq(TEST_SUCCESS_CARD)
     expect(request.expiry).to eq('0921')
     expect(request.merchid).to eq(CardConnectGateway.configuration.merchant_id) 
     expect(request.validate).to eq(true)
@@ -15,7 +15,7 @@ describe "Authorization" do
 
   it 'request validates with month/year' do
     request = CardConnectGateway::Authorization::Request.new({
-      account: '411111111111111',
+      account: TEST_SUCCESS_CARD,
       expiry_month: 9,
       expiry_year: 10
     })
@@ -45,7 +45,7 @@ describe "Authorization" do
 
   it 'auth successfully' do
     response = CardConnectGateway.authorization({
-      account: '411111111111111',
+      account: TEST_SUCCESS_CARD,
       expiry: '0921'
     })
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
