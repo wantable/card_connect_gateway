@@ -3,10 +3,10 @@ require 'spec_helper'
 describe "Authorization" do
   it 'request validates' do 
     request = CardConnectGateway::Authorization::Request.new({
-      account: TEST_SUCCESS_CARD,
+      account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921'
     })
-    expect(request.account).to eq(TEST_SUCCESS_CARD)
+    expect(request.account).to eq(VISA_APPROVAL_ACCOUNT)
     expect(request.expiry).to eq('0921')
     expect(request.merchid).to eq(CardConnectGateway.configuration.merchant_id) 
     expect(request.validate).to eq(true)
@@ -15,7 +15,7 @@ describe "Authorization" do
 
   it 'request validates with month/year' do
     request = CardConnectGateway::Authorization::Request.new({
-      account: TEST_SUCCESS_CARD,
+      account: VISA_APPROVAL_ACCOUNT,
       expiry_month: 9,
       expiry_year: 10
     })
@@ -45,12 +45,52 @@ describe "Authorization" do
 
   it 'auth successfully' do
     response = CardConnectGateway.authorization({
-      account: TEST_SUCCESS_CARD,
+      account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921'
     })
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
-    expect(response.errors).to eq({}) 
     expect(response.valid?).to eq(true)
+    expect(response.errors).to eq({}) 
+  end
+
+  it 'auth fail with refer call' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_REFER_CALL_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(false)
+    expect(fail.errors).to eq({FNOR: "Refer to issuer"}) 
+  end
+
+  it 'auth fail with do not honor' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_DO_NOT_HONOR_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(false)
+    expect(fail.errors).to eq({FNOR: "Do not honor"}) 
+  end
+
+  it 'auth fail with expired account' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_CARD_EXPIRED_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(false)
+    expect(fail.errors).to eq({FNOR: "Wrong expiration"}) 
+  end
+
+  it 'auth fail with insufficient funds' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_INSUFFICIENT_FUNDS_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(false)
+    expect(fail.errors).to eq({FNOR: "Declined"}) 
   end
 
 end

@@ -2,6 +2,11 @@ require 'rest_client'
 require 'json'
 module CardConnectGateway
   class BaseRequest < Base
+    PPAL = 'PPAL'
+    PAID = 'PAID', 
+    GIFT= 'GIFT'
+    PDEBIT = 'PDEBIT'
+
     def validate
       @errors = {}
       self.class.attributes.each do |key, validations|
@@ -36,6 +41,11 @@ module CardConnectGateway
 
     def errors
       @errors || {}
+    end
+
+    def initialize(options={})
+      options[:merchid] ||= CardConnectGateway.configuration.merchant_id if respond_to?(:merchid)
+      super(options)
     end
 
     def to_hash

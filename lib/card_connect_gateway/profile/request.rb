@@ -1,47 +1,49 @@
 module CardConnectGateway
-  module Authorization
+  module Profile
     class Request < BaseRequest
-      TELEPHONE = 'T' 
-      RECURRING = 'R'
-      ECOMMERCE = 'E'
+      
 
-      attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture
-
+      attr_accessor :profile, :defaultacct, :profileupdate, :accttype, :merchid, :account, :bankaba, :expiry, :name, :street, :city, :region, :country, :phone, :postal, :ssnl4, :email, :license
 
       def self.resource_name
-        'auth'
+        'profile'
       end
 
       def self.attributes 
         {
+          profile: {
+            maxLength: 20,
+          },
+          defaultacct: {
+            options: [Y, N],
+            default: Y
+          },
+          profileupdate: {
+            options: [Y, N],
+            default: N
+          },
+          accttype: {
+            options: [PPAL, PAID, GIFT, PDEBIT]
+          },
           merchid: { 
             required: true, 
             maxLength: 12
-          }, 
-          accttype: {
-            options: [PPAL, PAID, GIFT, PDEBIT]
           }, 
           account: {
             required: true,
             maxLength: 19
           },
+          bankaba: {
+            maxLength: 9
+          },
           expiry: {
             required: true,
             format: /^(0[1-9]|1[012])(\d{2})$/ ## MMYY (YYYYMMDD is also valid but I'm only going to support the MMYY here)
           }, 
-          amount: {
-            required: true,
-            default: 0,
-            maxLength: 12
-          },
-          currency: {
-            required: true,
-            default: USD
-          },
           name: {
             maxLength: 30
           },
-          address: {
+          street: {
             maxLength: 30
           }, 
           city: {
@@ -60,37 +62,14 @@ module CardConnectGateway
           postal: { 
             maxLength: 9
           }, 
+          ssnl4: { 
+            maxLength: 4
+          }, 
           email: {
             maxLength: 30
           }, 
-          ecomind: {
-            maxLength: 1,
-            default: ECOMMERCE
-          }, 
-          cvv2: {
-            maxLength: 4
-          }, 
-          orderid: {
-            maxLength: 19
-          }, 
-          track: {
-            maxLength: 76
-          }, 
-          bankaba: {
-            maxLength: 9
-          }, 
-          tokenize: {
-            maxLength: 1,
-            default: Y,
-            options: [Y, N]
-          }, 
-          termid: {
-            maxLength: 30
-          }, 
-          capture: {
-            maxLength: 1,
-            options: [Y, N],
-            default: N
+          license: {
+            maxLength: 15
           }
         }
       end

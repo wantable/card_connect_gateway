@@ -1,7 +1,7 @@
-require 'card_connect_gateway/authorization/request'
-require 'card_connect_gateway/authorization/response'
+require 'card_connect_gateway/profile/request'
+require 'card_connect_gateway/profile/response'
 module CardConnectGateway
-  module Authorization
+  module Profile
     include Helpers
 
     def self.new(options={})

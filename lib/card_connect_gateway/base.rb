@@ -2,6 +2,8 @@ module CardConnectGateway
   class Base
     Y = 'Y'
     N = 'N'
+    USD = 'USD'
+    US = 'US'
 
     def initialize(options={})
       self.class.attributes.each do |key, validations|
