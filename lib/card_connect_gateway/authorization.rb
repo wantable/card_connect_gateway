@@ -6,7 +6,7 @@ module CardConnectGateway
 
     def self.new(options={})
       request = Request.new(options)
-      !request.valid? ? request : Response.new(parse_response(request.send))
+      request.valid? ? Response.new(parse_response(request.send)) : request
     end
   end
 end
