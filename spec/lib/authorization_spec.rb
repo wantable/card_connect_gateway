@@ -93,4 +93,15 @@ describe "Authorization" do
     expect(fail.errors).to eq({FNOR: "Declined"}) 
   end
 
+  it 'auth and make profile' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(true)
+    expect(fail.errors).to eq({}) 
+    expect(fail.profileid.length).to eq(20) 
+  end
 end

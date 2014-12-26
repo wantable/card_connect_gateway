@@ -5,10 +5,10 @@ module CardConnectGateway
     USD = 'USD'
     US = 'US'
 
+    attr_accessor :errors
+
     def initialize(options={})
-      self.class.attributes.each do |key, validations|
-        set_value(key, validations[:default])
-      end if self.class.respond_to?(:attributes)
+      self.errors = {}
 
       options.each do |key, value|
         value = Y if value == true

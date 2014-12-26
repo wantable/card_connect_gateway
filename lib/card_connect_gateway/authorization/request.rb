@@ -5,7 +5,8 @@ module CardConnectGateway
       RECURRING = 'R'
       ECOMMERCE = 'E'
 
-      attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture
+      attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, 
+                    :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture, :profile
 
 
       def self.resource_name
@@ -13,6 +14,7 @@ module CardConnectGateway
       end
 
       def self.attributes 
+        # http://www.cardconnect.com/developer/docs/#authorization-request
         {
           merchid: { 
             required: true, 
@@ -91,7 +93,22 @@ module CardConnectGateway
             maxLength: 1,
             options: [Y, N],
             default: N
+          },
+          ssnl4:{
+            maxLength: 4
+          },
+          license:{
+            maxLength: 15
+          },
+          # http://www.cardconnect.com/developer/docs/#profiles
+          profile: { 
+            # could be 1 or 20 long
           }
+          # USER FIELDS NOT IMPLEMENTED
+          # http://www.cardconnect.com/developer/docs/#user-fields
+
+          # 3D SECURE NOT IMPLEMENTED 
+          # http://www.cardconnect.com/developer/docs/#3d-secure
         }
       end
 

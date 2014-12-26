@@ -2,10 +2,11 @@ module CardConnectGateway
   module Authorization
     class Response < BaseResponse
 
-      attr_accessor :respstat, :retref, :account, :token, :amount, :merchid, :respcode, :resptext, :respproc, :avsresp, :cvvresp, :authcode, :commcard
+      attr_accessor :respstat, :retref, :account, :token, :amount, :merchid, :respcode, :resptext, :respproc, :avsresp, 
+                    :cvvresp, :authcode, :commcard, :profileid
 
       def validate
-        @errors = {}
+        self.errors = {}
 
         if respstat != APPROVED
           if resptext and !resptext.empty? and respproc and !respproc.empty?
@@ -16,11 +17,8 @@ module CardConnectGateway
           end
         end
 
-        puts "Validating auth #{errors.inspect} - #{respstat} #{resptext}"
-
         @validated = true
-        @errors.empty?
-
+        errors.empty?
       end
     end
   end
