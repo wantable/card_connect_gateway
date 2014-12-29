@@ -24,20 +24,18 @@ module CardConnectGateway
             options: [PPAL, PAID, GIFT, PDEBIT]
           }, 
           account: {
-            required: true,
-            maxLength: 19
+            maxLength: 19,
+            required: Proc.new {|request| (request.profile.nil? or request.profile.length <= 1) }
           },
           expiry: {
-            required: true,
+            required: Proc.new {|request| (request.profile.nil? or request.profile.length <= 1) },
             format: /^(0[1-9]|1[012])(\d{2})$/ ## MMYY (YYYYMMDD is also valid but I'm only going to support the MMYY here)
           }, 
           amount: {
-            required: true,
             default: 0,
             maxLength: 12
           },
           currency: {
-            required: true,
             default: USD
           },
           name: {
@@ -70,7 +68,9 @@ module CardConnectGateway
             default: ECOMMERCE
           }, 
           cvv2: {
-            maxLength: 4
+            # card connect doesn't require this but since this is an online transaction it should be needed
+            maxLength: 4,
+            required: Proc.new {|request| (request.profile.nil? or request.profile.length <= 1) } 
           }, 
           orderid: {
             maxLength: 19

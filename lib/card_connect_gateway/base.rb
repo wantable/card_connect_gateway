@@ -11,8 +11,6 @@ module CardConnectGateway
       self.errors = {}
 
       options.each do |key, value|
-        value = Y if value == true
-        value = F if value == false
         set_value(key, value)
       end
     end

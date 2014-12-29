@@ -11,11 +11,12 @@ module CardConnectGateway
       self.errors = {}
       self.class.attributes.each do |key, validations|
         value = get_value(key)
-        if validations[:required] == true and (value.nil? or value.empty?)
-          self.errors[key] = 'is required.'
-        end
-
-        if value 
+        if value.nil? or value.empty?
+          req = validations[:required]
+          if req == true or (req.class == Proc and req.call(self) == true)
+            self.errors[key] = 'is required.'
+          end
+        else 
           if maxLength = validations[:maxLength]
             self.errors[key] = "cannot be longer than #{maxLength}." if value.length > maxLength
           end
@@ -45,8 +46,15 @@ module CardConnectGateway
       self.class.attributes.each do |key, validations|
         set_value(key, validations[:default])
       end
+
+      mapped_options = {}
+      options.each do |key, value|
+        value = Y if value == true
+        value = N if value == false
+        mapped_options[key] = value
+      end
       
-      super(options)
+      super(mapped_options)
     end
 
     def to_hash
