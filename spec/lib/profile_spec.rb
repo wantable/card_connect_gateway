@@ -54,4 +54,35 @@ describe "Profile" do
     expect(response.profileid).to_not be_nil
   end
 
+  it 'update successfully' do
+    response = CardConnectGateway.create_profile({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(response.valid?).to eq(true)
+    expect(response.profileid).to_not be_nil
+
+    response2 = CardConnectGateway.update_profile({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry_month: 9,
+      expiry_year: 10,
+      profile: response.profileid
+    })
+
+    expect(response2.valid?).to eq(true)
+    expect(response2.profileid).to eq(response.profileid)
+
+  end
+
+  it 'cant update without profile' do
+    response = CardConnectGateway.update_profile({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921'
+    })
+    expect(response.valid?).to eq(false)
+    expect(response.errors[:profile]).to eq('is required.')
+
+
+  end
+
 end

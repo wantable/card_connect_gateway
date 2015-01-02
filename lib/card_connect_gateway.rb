@@ -29,6 +29,7 @@ module CardConnectGateway
 
   def self.update_profile(options={})
     # same as create. just requires the profile id be filled in on the api side
+    options[:profileupdate] = Base::Y
     Profile.new(options) 
   end
 

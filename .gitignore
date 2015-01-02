@@ -1,3 +1,6 @@
 .ruby-version
 .ruby-gemset
 .DS_Store
+console.sh
+
+test.sh
