@@ -1,16 +1,17 @@
 require 'spec_helper'
 
-
-CardConnectGateway.configure do |config|
-  config.test_mode = true
-  config.merchant_id = 'test_merchant_id'
-  config.user_id = 'test_user_id'
-  config.password = 'test_password'
-end
-
 describe "Configuration" do
-  it { expect(CardConnectGateway.configuration.merchant_id).to eq('test_merchant_id') }
-  it { expect(CardConnectGateway.configuration.user_id).to eq('test_user_id') }
-  it { expect(CardConnectGateway.configuration.password).to eq('test_password') }
-  it { expect(CardConnectGateway.configuration.test_mode).to eq(true) }
+
+  it 'configuration is saved from helper' do
+    expect(CardConnectGateway.configuration.merchant_id).to eq(ENV["CARD_CONNECT_MERCHANT_ID"])
+    expect(CardConnectGateway.configuration.user_id).to eq(ENV['CARD_CONNECT_USER_ID']) 
+    expect(CardConnectGateway.configuration.password).to eq(ENV['CARD_CONNECT_PASSWORD']) 
+    expect(CardConnectGateway.configuration.test_mode).to eq(true) 
+  end
+
+  it 'environment is set' do
+    expect(ENV["CARD_CONNECT_MERCHANT_ID"]).not_to be_nil
+    expect(ENV["CARD_CONNECT_USER_ID"]).not_to be_nil
+    expect(ENV["CARD_CONNECT_PASSWORD"]).not_to be_nil
+  end
 end
