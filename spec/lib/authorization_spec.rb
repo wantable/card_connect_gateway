@@ -5,7 +5,8 @@ describe "Authorization" do
     request = CardConnectGateway::Authorization::Request.new({
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(request.account).to eq(VISA_APPROVAL_ACCOUNT)
     expect(request.expiry).to eq('0921')
@@ -20,6 +21,7 @@ describe "Authorization" do
       expiry_month: 9,
       expiry_year: 10,
       cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(request.expiry).to eq('0910') 
     expect(request.errors).to eq({})
@@ -49,7 +51,8 @@ describe "Authorization" do
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(response.valid?).to eq(true)
@@ -60,7 +63,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_REFER_CALL_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -71,7 +75,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_DO_NOT_HONOR_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -82,7 +87,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_CARD_EXPIRED_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -93,7 +99,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_INSUFFICIENT_FUNDS_ACCOUNT,
       expiry: '0921',
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -104,7 +111,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
       cvv2: CVV_MISMATCH,
-      expiry: '0921'
+      expiry: '0921',
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -115,7 +123,8 @@ describe "Authorization" do
     fail = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
       cvv2: CVV_NOT_PROCESSED,
-      expiry: '0921'
+      expiry: '0921',
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
@@ -142,7 +151,8 @@ describe "Authorization" do
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
       profile: true,
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
     expect(auth.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(auth.valid?).to eq(true)
@@ -155,7 +165,8 @@ describe "Authorization" do
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
       profile: true,
-      cvv2: CVV_MATCH
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
     })
 
     profileid = auth.profileid
@@ -295,20 +306,49 @@ describe "Authorization" do
     expect(request.errors[:card_type]).to eq('is not supported.')
   end
 
-  it 'visa avs match' do
-    VISA_AVS_MATCH_ZIP
-  end
+  it 'avs responses with only zip code match required' do
 
-  it 'visa avs partial match' do
-    VISA_AVS_PARTIAL_MATCH_ZIP
-  end
+    CardConnectGateway.configure do |config|
+      config.require_avs_zip_code_match = true
+      config.require_avs_address_match = false
+      config.require_avs_customer_name_match = false
+    end
 
-  it 'mastercard zip mismach' do
-    MASTERCARD_ZIP_MISMATCH
-  end
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
 
-  it 'mastercard avs mismatch' do
-    MASTERCARD_AVS_MISMATCH
-  end
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_PARTIAL_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
 
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_ZIP_MISMATCH
+    })
+    expect(response.valid?).to eq(false)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_AVS_MISMATCH
+    })
+    expect(response.valid?).to eq(false)
+
+  end
 end

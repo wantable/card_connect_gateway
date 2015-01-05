@@ -69,7 +69,7 @@ module CardConnectGateway
       url = "https://#{CardConnectGateway.configuration.user_id}:#{CardConnectGateway.configuration.password}@"
       url += "#{CardConnectGateway.configuration.url.gsub("http://","").gsub("https://","")}/#{self.class.resource_name}"
 
-      puts "sending PUT request to #{url}\r\nwith content\r\n#{to_hash.inspect}" if CardConnectGateway.configuration.debug
+      puts "sending PUT request to #{url}\r\nwith content\r\n#{to_hash.to_json}" if CardConnectGateway.configuration.debug
       
       begin
         response = RestClient.put(url, self.to_hash.to_json, content_type: :json, accept: :json)
