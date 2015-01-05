@@ -271,30 +271,35 @@ describe "Authorization" do
     request = CardConnectGateway::Authorization::Request.new({
       account: MASTERCARD_APPROVAL_ACCOUNT
     })
+    expect(request.card_type).to eq(CardConnectGateway::Base::MASTERCARD)
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
 
     request = CardConnectGateway::Authorization::Request.new({
       account: AMEX_APPROVAL_ACCOUNT
     })
+    expect(request.card_type).to eq(CardConnectGateway::Base::AMEX)
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
 
     request = CardConnectGateway::Authorization::Request.new({
       account: DISCOVER_APPROVAL_ACCOUNT
     })
+    expect(request.card_type).to eq(CardConnectGateway::Base::DISCOVER)
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
 
     request = CardConnectGateway::Authorization::Request.new({
       account: DINERS_APPROVAL_ACCOUNT
     })
+    expect(request.card_type).to eq(CardConnectGateway::Base::DINERS_CLUB)
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
 
     request = CardConnectGateway::Authorization::Request.new({
       account: JCB_APPROVAL_ACCOUNT
     })
+    expect(request.card_type).to eq(CardConnectGateway::Base::JCB)
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
 
@@ -302,6 +307,7 @@ describe "Authorization" do
       account: '1234567890123456', # not a real number
       expiry: '0921'
     })
+    expect(request.card_type).to be_nil
     expect(request.valid?).to eq(false)
     expect(request.errors[:card_type]).to eq('is not supported.')
   end
@@ -349,6 +355,145 @@ describe "Authorization" do
       postal: MASTERCARD_AVS_MISMATCH
     })
     expect(response.valid?).to eq(false)
+
+  end
+
+
+  it 'avs responses with only address match required' do
+
+    CardConnectGateway.configure do |config|
+      config.require_avs_zip_code_match = false
+      config.require_avs_address_match = true
+      config.require_avs_customer_name_match = false
+    end
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_PARTIAL_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(false)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_ZIP_MISMATCH
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_AVS_MISMATCH
+    })
+    expect(response.valid?).to eq(false)
+
+  end
+
+
+  it 'avs responses with address and zip code match required' do
+
+    CardConnectGateway.configure do |config|
+      config.require_avs_zip_code_match = true
+      config.require_avs_address_match = true
+      config.require_avs_customer_name_match = false
+    end
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_PARTIAL_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(false)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_ZIP_MISMATCH
+    })
+    expect(response.valid?).to eq(false)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_AVS_MISMATCH
+    })
+    expect(response.valid?).to eq(false)
+
+  end
+
+  it 'avs responses with no match required' do
+    CardConnectGateway.configure do |config|
+      config.require_avs_zip_code_match = false
+      config.require_avs_address_match = false
+      config.require_avs_customer_name_match = false
+    end
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_PARTIAL_MATCH_ZIP
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_ZIP_MISMATCH
+    })
+    expect(response.valid?).to eq(true)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: MASTERCARD_AVS_MISMATCH
+    })
+    expect(response.valid?).to eq(true)
 
   end
 end
