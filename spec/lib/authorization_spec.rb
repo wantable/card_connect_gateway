@@ -168,4 +168,147 @@ describe "Authorization" do
     expect(auth2.errors).to eq({}) 
   end
 
+  it 'check card types' do 
+    request = CardConnectGateway::Authorization::Request.new({
+      account: VISA_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::VISA)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: MASTERCARD_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::MASTERCARD)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: AMEX_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::AMEX)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: DISCOVER_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::DISCOVER)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: DINERS_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::DINERS_CLUB)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: JCB_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::JCB)
+
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: '1234567890123456', # not a real number
+      expiry: '0921'
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+  end
+
+  it 'check card type on response' do 
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::VISA)
+
+    response = CardConnectGateway.authorization({
+      account: MASTERCARD_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::MASTERCARD)
+
+    response = CardConnectGateway.authorization({
+      account: AMEX_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::AMEX)
+
+    response = CardConnectGateway.authorization({
+      account: DISCOVER_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::DISCOVER)
+
+    response = CardConnectGateway.authorization({
+      account: DINERS_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::DINERS_CLUB)
+
+    response = CardConnectGateway.authorization({
+      account: JCB_APPROVAL_ACCOUNT
+    })
+    expect(response.card_type).to eq(CardConnectGateway::Base::JCB)
+  end
+
+  it 'check card type on response with custom config' do 
+    CardConnectGateway.configure do |config|
+      config.test_mode = true
+      config.merchant_id = ENV["CARD_CONNECT_MERCHANT_ID"]
+      config.user_id = ENV['CARD_CONNECT_USER_ID']
+      config.password = ENV['CARD_CONNECT_PASSWORD']
+      config.debug = true
+      config.supported_card_types = [
+        CardConnectGateway::Base::VISA
+      ]
+    end
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: VISA_APPROVAL_ACCOUNT
+    })
+    expect(request.card_type).to eq(CardConnectGateway::Base::VISA)
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: MASTERCARD_APPROVAL_ACCOUNT
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: AMEX_APPROVAL_ACCOUNT
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: DISCOVER_APPROVAL_ACCOUNT
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: DINERS_APPROVAL_ACCOUNT
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: JCB_APPROVAL_ACCOUNT
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+
+    request = CardConnectGateway::Authorization::Request.new({
+      account: '1234567890123456', # not a real number
+      expiry: '0921'
+    })
+    expect(request.valid?).to eq(false)
+    expect(request.errors[:card_type]).to eq('is not supported.')
+  end
+
+  it 'visa avs match' do
+    VISA_AVS_MATCH_ZIP
+  end
+
+  it 'visa avs partial match' do
+    VISA_AVS_PARTIAL_MATCH_ZIP
+  end
+
+  it 'mastercard zip mismach' do
+    MASTERCARD_ZIP_MISMATCH
+  end
+
+  it 'mastercard avs mismatch' do
+    MASTERCARD_AVS_MISMATCH
+  end
+
 end

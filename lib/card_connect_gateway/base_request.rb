@@ -8,7 +8,7 @@ module CardConnectGateway
     PDEBIT = 'PDEBIT'
 
     def validate
-      self.errors = {}
+      self.errors ||= {}
       self.class.attributes.each do |key, validations|
         value = get_value(key)
         if value.nil? or value.empty?

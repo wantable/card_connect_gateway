@@ -3,6 +3,31 @@ A Ruby API client that interfaces with card connect's REST api for credit card p
 
 [Card Connect Documentation](http://www.cardconnect.com/developer/docs/)
 
+### Setup ###
+
+config/initializers/card_connect_gateway.rb
+
+```ruby
+
+  CardConnectGateway.configure do |config|
+    config.test_mode = true
+    config.merchant_id = ENV["CARD_CONNECT_MERCHANT_ID"]
+    config.user_id = ENV['CARD_CONNECT_USER_ID']
+    config.password = ENV['CARD_CONNECT_PASSWORD']
+    config.debug = true
+    config.supported_card_types = [
+      CardConnectGateway::Base::VISA, 
+      CardConnectGateway::Base::MASTERCARD, 
+      CardConnectGateway::Base::AMEX, 
+      CardConnectGateway::Base::DISCOVER, 
+      CardConnectGateway::Base::MAESTRO, 
+      CardConnectGateway::Base::DINERS_CLUB, 
+      CardConnectGateway::Base::JCB
+    ]
+  end
+
+```
+
 ### Run Tests ###
 
 ``` 

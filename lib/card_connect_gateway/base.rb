@@ -1,9 +1,18 @@
 module CardConnectGateway
   class Base
+
     Y = 'Y'
     N = 'N'
     USD = 'USD'
     US = 'US'
+    
+    VISA = "Visa"
+    MASTERCARD = "MasterCard"
+    MAESTRO = "Maestro"
+    DINERS_CLUB = "Diners Club"
+    AMEX = "AMEX"
+    DISCOVER = "Discover"
+    JCB = "JCB"
 
     attr_accessor :errors
 

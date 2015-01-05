@@ -16,7 +16,7 @@ module CardConnectGateway
       AVS_NO_MATCH = 'No match'
 
       attr_accessor :respstat, :retref, :account, :token, :amount, :merchid, :respcode, :resptext, :respproc, :avsresp, 
-                    :cvvresp, :authcode, :commcard, :profileid, :check_cvv
+                    :cvvresp, :authcode, :commcard, :profileid, :check_cvv, :card_type
 
       def validate
         self.errors = {}
@@ -41,9 +41,28 @@ module CardConnectGateway
         errors.empty?
       end
 
-      def process_avs_respons
+      def process_avs_response
         # http://www.cardconnect.com/developer/docs/#address-verification-system
 
+        case card_type 
+
+        when VISA
+
+        when MASTERCARD
+
+        when MAESTRO
+
+        when DINERS_CLUB
+
+        when AMEX
+
+        when DISCOVER
+
+        when JCB
+
+        else
+
+        end
       end
     end
   end

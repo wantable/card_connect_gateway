@@ -82,7 +82,6 @@ describe "Profile" do
     expect(response.valid?).to eq(false)
     expect(response.errors[:profile]).to eq('is required.')
 
-
   end
 
 end
