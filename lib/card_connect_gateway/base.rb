@@ -1,18 +1,25 @@
 module CardConnectGateway
   class Base
+
     Y = 'Y'
     N = 'N'
     USD = 'USD'
     US = 'US'
+    
+    VISA = "Visa"
+    MASTERCARD = "MasterCard"
+    MAESTRO = "Maestro"
+    DINERS_CLUB = "Diners Club"
+    AMEX = "AMEX"
+    DISCOVER = "Discover"
+    JCB = "JCB"
+
+    attr_accessor :errors
 
     def initialize(options={})
-      self.class.attributes.each do |key, validations|
-        set_value(key, validations[:default])
-      end if self.class.respond_to?(:attributes)
+      self.errors = {}
 
       options.each do |key, value|
-        value = Y if value == true
-        value = F if value == false
         set_value(key, value)
       end
     end

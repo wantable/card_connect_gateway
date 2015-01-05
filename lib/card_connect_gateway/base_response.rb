@@ -13,13 +13,8 @@ module CardConnectGateway
     end
 
     def valid?
-      @validated ? @errors.empty? : validate
+      @validated ? self.errors.empty? : validate
     end
-
-    def errors
-      @errors || {}
-    end
-
 
   end
 end

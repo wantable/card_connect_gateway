@@ -3,7 +3,8 @@ module CardConnectGateway
     class Request < BaseRequest
       
 
-      attr_accessor :profile, :defaultacct, :profileupdate, :accttype, :merchid, :account, :bankaba, :expiry, :name, :street, :city, :region, :country, :phone, :postal, :ssnl4, :email, :license
+      attr_accessor :profile, :defaultacct, :profileupdate, :accttype, :merchid, :account, :bankaba, :expiry, :name, 
+                    :street, :city, :region, :country, :phone, :postal, :ssnl4, :email, :license
 
       def self.resource_name
         'profile'
@@ -13,6 +14,7 @@ module CardConnectGateway
         {
           profile: {
             maxLength: 20,
+            required: Proc.new {|request| (request.profileupdate == Y) }
           },
           defaultacct: {
             options: [Y, N],

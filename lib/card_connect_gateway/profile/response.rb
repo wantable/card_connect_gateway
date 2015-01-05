@@ -2,10 +2,11 @@ module CardConnectGateway
   module Profile
     class Response < BaseResponse
 
-      attr_accessor :profileid, :acctid, :respstat, :account, :respcode, :resptext, :accttype, :expiry, :name, :address, :city, :region, :country, :phone, :postal, :ssnl4, :email, :defaultacct, :license, :expiry_month, :expiry_year
+      attr_accessor :profileid, :acctid, :respstat, :account, :respcode, :resptext, :accttype, :expiry, :name, 
+                  :address, :city, :region, :country, :phone, :postal, :ssnl4, :email, :defaultacct, :license, :expiry_month, :expiry_year
 
       def validate
-        @errors = {}
+        self.errors = {}
 
         if respstat != APPROVED
           if resptext and !resptext.empty? and respproc and !respproc.empty?
@@ -17,7 +18,7 @@ module CardConnectGateway
 
         @validated = true
 
-        @errors.empty?
+        errors.empty?
       end
 
       def initialize(options={})
