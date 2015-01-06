@@ -1,6 +1,5 @@
 # Card Connect Gateway #
-A Ruby API client that interfaces with card connect's REST api for credit card payment processing.
-[![Code Climate](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/gpa.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed)
+A Ruby API client that interfaces with card connect's REST api for credit card payment processing. [![Code Climate](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/gpa.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed) [![Build Status](https://magnum.travis-ci.com/wantable/card_connect_gateway.svg?token=5QxyH7sFBDYR4iimsFye&branch=AjaxTokenizer)](https://magnum.travis-ci.com/wantable/card_connect_gateway)
 
 [Card Connect Documentation](http://www.cardconnect.com/developer/docs/)
 
@@ -40,7 +39,7 @@ CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
 ```
 
 
-### Compile CoffeeScript with Grunt ### 
+### Compile CoffeeScript with Grunt
 first install grunt
 
 ```
