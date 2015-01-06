@@ -173,7 +173,8 @@ describe "Authorization" do
     auth2 = CardConnectGateway.authorization({
       profile: profileid,
       amount: 36,
-      check_cvv: false
+      check_cvv: false,
+      capture: true
     })
     expect(auth2.valid?).to eq(true)
     expect(auth2.errors).to eq({}) 
@@ -312,6 +313,7 @@ describe "Authorization" do
     expect(request.errors[:card_type]).to eq('is not supported.')
   end
 
+=begin
   it 'avs responses with only zip code match required' do
 
     CardConnectGateway.configure do |config|
@@ -357,7 +359,6 @@ describe "Authorization" do
     expect(response.valid?).to eq(false)
 
   end
-
 
   it 'avs responses with only address match required' do
 
@@ -496,4 +497,5 @@ describe "Authorization" do
     expect(response.valid?).to eq(true)
 
   end
+=end
 end
