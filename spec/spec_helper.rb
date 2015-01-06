@@ -36,7 +36,7 @@ RSpec.configure do |config|
       config.user_id = ENV['CARD_CONNECT_USER_ID']
       config.password = ENV['CARD_CONNECT_PASSWORD']
       config.debug = true
-      config.require_avs_zip_code_match = true
+      config.require_avs_zip_code_match = false
       config.require_avs_address_match = false
       config.require_avs_customer_name_match = false
       config.supported_card_types = [

@@ -7,6 +7,7 @@ require 'card_connect_gateway/base_response'
 require 'card_connect_gateway/authorization'
 require 'card_connect_gateway/void'
 require 'card_connect_gateway/profile'
+require 'card_connect_gateway/refund'
 
 module CardConnectGateway
 
@@ -38,5 +39,9 @@ module CardConnectGateway
 
   def self.void(options={})
     Void.new(options)
+  end
+
+  def self.refund(options={})
+    Refund.new(options)
   end
 end
