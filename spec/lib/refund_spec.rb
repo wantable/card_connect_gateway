@@ -8,7 +8,7 @@ describe "Refund" do
     expect(request.errors).to eq({:retref=>"is required."})
   end
 
-  it 'void successfully' do
+  it 'refund attempt' do
     auth = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
@@ -23,7 +23,8 @@ describe "Refund" do
     })
 
     refund.valid?
-    expect(refund.errors).to eq({}) 
+    # can't actually process one of these because you have to wait 24 hours
+    expect(refund.errors).to eq(PPS: "Txn not settled")  
     expect(refund.amount).to eq(auth.amount)
   end
 end
