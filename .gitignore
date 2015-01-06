@@ -4,3 +4,5 @@
 console.sh
 
 test.sh
+node_modules/*
+*.log
