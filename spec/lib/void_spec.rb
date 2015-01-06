@@ -5,7 +5,7 @@ describe "Void" do
   it 'request validates' do 
     request = CardConnectGateway::Void::Request.new()
     expect(request.valid?).to eq(false)
-    expect(request.errors).to eq({:retref=>"is required."})
+    expect(request.errors).to eq(retref: "is required.")
   end
 
   it 'void successfully' do
