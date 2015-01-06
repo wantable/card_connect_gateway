@@ -8,14 +8,15 @@ module CardConnectGateway
     PDEBIT = 'PDEBIT'
 
     def validate
-      self.errors = {}
+      self.errors ||= {}
       self.class.attributes.each do |key, validations|
         value = get_value(key)
-        if validations[:required] == true and (value.nil? or value.empty?)
-          self.errors[key] = 'is required.'
-        end
-
-        if value 
+        if value.nil? or value.empty?
+          req = validations[:required]
+          if req == true or (req.class == Proc and req.call(self) == true)
+            self.errors[key] = 'is required.'
+          end
+        else 
           if maxLength = validations[:maxLength]
             self.errors[key] = "cannot be longer than #{maxLength}." if value.length > maxLength
           end
@@ -45,8 +46,15 @@ module CardConnectGateway
       self.class.attributes.each do |key, validations|
         set_value(key, validations[:default])
       end
+
+      mapped_options = {}
+      options.each do |key, value|
+        value = Y if value == true
+        value = N if value == false
+        mapped_options[key] = value
+      end
       
-      super(options)
+      super(mapped_options)
     end
 
     def to_hash
@@ -61,7 +69,7 @@ module CardConnectGateway
       url = "https://#{CardConnectGateway.configuration.user_id}:#{CardConnectGateway.configuration.password}@"
       url += "#{CardConnectGateway.configuration.url.gsub("http://","").gsub("https://","")}/#{self.class.resource_name}"
 
-      puts "sending PUT request to #{url}\r\nwith content\r\n#{to_hash.inspect}" if CardConnectGateway.configuration.debug
+      puts "sending PUT request to #{url}\r\nwith content\r\n#{to_hash.to_json}" if CardConnectGateway.configuration.debug
       
       begin
         response = RestClient.put(url, self.to_hash.to_json, content_type: :json, accept: :json)

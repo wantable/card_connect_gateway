@@ -14,6 +14,7 @@ module CardConnectGateway
         {
           profile: {
             maxLength: 20,
+            required: Proc.new {|request| (request.profileupdate == Y) }
           },
           defaultacct: {
             options: [Y, N],

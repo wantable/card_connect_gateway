@@ -2,10 +2,11 @@ require 'card_connect_gateway/void/request'
 require 'card_connect_gateway/void/response'
 module CardConnectGateway
   module Void
+    include Helpers
+    
     def self.new(options={})
       request = Request.new(options)
-      rest_response = {} # todo - send request through restclient
-      response = Response.new(rest_response)
+      request.valid? ? Response.new(parse_response(request.send)) : request
     end
   end
 end

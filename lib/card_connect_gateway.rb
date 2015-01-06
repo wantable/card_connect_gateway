@@ -5,7 +5,6 @@ require 'card_connect_gateway/base'
 require 'card_connect_gateway/base_request'
 require 'card_connect_gateway/base_response'
 require 'card_connect_gateway/authorization'
-require 'card_connect_gateway/capture'
 require 'card_connect_gateway/void'
 require 'card_connect_gateway/profile'
 
@@ -29,6 +28,7 @@ module CardConnectGateway
 
   def self.update_profile(options={})
     # same as create. just requires the profile id be filled in on the api side
+    options[:profileupdate] = Base::Y
     Profile.new(options) 
   end
 
