@@ -2,7 +2,7 @@ describe "cardConnect", ->
   describe "ajaxTokenizer", ->
     httpBackend = null
     ajaxTokenizer = null
-    CARDCONNECT_AJAX_URL = 'fts.prinpay.com/cardsecure'
+    CARDCONNECT_AJAX_URL = 'some.url'
 
     beforeEach module("cardConnect")
 
