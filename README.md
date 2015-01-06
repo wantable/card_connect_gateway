@@ -32,12 +32,37 @@ config/initializers/card_connect_gateway.rb
 
 ```
 
+setup ajax tokenizer
+```javascript
+
+CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
+
+```
+
+
+### Compile CoffeeScript with Grunt ### 
+first install grunt
+
+```
+$ npm install -g grunt-cli
+$ npm install grunt-contrib-coffee --save-dev
+$ npm install grunt-contrib-watch --save-dev
+```
+
+run ```$ grunt watch```
+
+
 ### Run Tests ###
 
+rspec
+
 ``` 
-  $ rake
+  $ rake test
   ....
 
   Finished in 0.00142 seconds (files took 0.09582 seconds to load)
   4 examples, 0 failures
 ```
+
+jasmine
+``` $ rake jasmine ``` and visit localhost:8888

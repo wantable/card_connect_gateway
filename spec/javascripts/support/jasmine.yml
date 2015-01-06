@@ -1,0 +1,18 @@
+
+stylesheets:
+  - stylesheets/**/*.css
+
+spec_dir: spec/javascripts
+spec_files:
+  - '*[sS]pec.js'
+  - 'compiled/*[sS]pec.js'
+
+src_files:
+  - vendor/javascripts/angular.js
+  - vendor/javascripts/angular-mocks.js
+  - public/javascripts/*.js
+  - public/javascripts/compiled/*.js
+helpers:
+  - 'helpers/*.js'
+
+
