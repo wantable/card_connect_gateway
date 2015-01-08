@@ -51,7 +51,7 @@ response = CardConnectGateway.authorization({
   postal: '19406'
 })
 response.valid?
-  => true 
+#  => true 
 
 
 response = CardConnectGateway.authorization({
@@ -63,10 +63,10 @@ response = CardConnectGateway.authorization({
 })
 response.valid?
 response.errors
-  => {:postal=>"doesn't match."} 
+#  => {:postal=>"doesn't match."} 
 
 response.card_type
-  => "MasterCard" 
+#  => "MasterCard" 
 
 ```
 
@@ -79,7 +79,7 @@ response = CardConnectGateway.create_profile({
   expiry: '0921'
 })
 response.valid? 
-  => true
+#  => true
 
 # update
 response2 = CardConnectGateway.update_profile({
@@ -89,7 +89,7 @@ response2 = CardConnectGateway.update_profile({
   profile: response.profileid
 })
 response.valid? 
-  => true
+#  => true
 
 ```
 
@@ -111,7 +111,7 @@ void = CardConnectGateway.void({
 })
 
 void.valid?
-  => true
+#  => true
 
 ```
 
@@ -134,7 +134,7 @@ refund = CardConnectGateway.refund({
 refund.valid?
 # can't actually process one of these because you have to wait 24 hours
 refund.errors 
-  => {PPS: "Txn not settled"}
+#  => {PPS: "Txn not settled"}
 ```
 
 ### Compile CoffeeScript with Grunt ###
