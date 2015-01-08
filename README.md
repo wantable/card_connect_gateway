@@ -75,7 +75,7 @@ response.card_type
 ```ruby
 # create
 response = CardConnectGateway.create_profile({
-  account: '4788250000121443,
+  account: '4788250000121443',
   expiry: '0921'
 })
 response.valid? 
@@ -151,7 +151,7 @@ run ```$ grunt watch```
 
 ### Run Tests ###
 
-rspec
+**rspec**
 
 ``` 
   $ rake test
@@ -161,5 +161,5 @@ rspec
   4 examples, 0 failures
 ```
 
-jasmine
+**jasmine**
 ``` $ rake jasmine ``` and visit localhost:8888
