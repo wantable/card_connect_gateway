@@ -136,6 +136,10 @@ module CardConnectGateway
           options[:expiry] = "#{sprintf('%02d', month.to_i)}#{sprintf('%02d', year.to_i)}"
         end
 
+        if options[:amount] and options[:amount].class != String
+          options[:amount] = (options[:amount] * 100).to_i
+        end
+
         super(options)
       end
 
