@@ -152,6 +152,21 @@ module CardConnectGateway
         !profile.nil? and profile.length > 1
       end
 
+      def send
+        # CardConnectGateway.configuration
+        if !has_profile_id? and card_type == VISA and amount == 0 and cvv2 and !cvv2.empty? and postal and !postal.empty?
+          # card connect doesn't let you do cvv and avs on a $0 visa auth so we have to do an extra request just for that
+          extra_request = self.clone
+          extra_request.cvv2 = nil
+          extra_request.profile = nil
+          extra_response = extra_request.send
+
+          super.merge("avsresp" => extra_response["avsresp"])
+        else
+          super
+        end
+      end
+
       protected
 
 

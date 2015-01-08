@@ -34,7 +34,7 @@ module CardConnectGateway
       Z = 'Z'
 
       attr_accessor :respstat, :retref, :account, :token, :amount, :merchid, :respcode, :resptext, :respproc, :avsresp, 
-                    :cvvresp, :authcode, :commcard, :profileid, :check_cvv, :card_type, :zip_match, :address_match, :customer_name_match
+                    :cvvresp, :authcode, :commcard, :profileid, :check_cvv, :card_type, :zip_match, :address_match, :customer_name_match, :check_avs
 
       def validate
         self.errors = {}
@@ -55,19 +55,21 @@ module CardConnectGateway
           end
         end
 
-        #CardConnectGateway.configuration
-        validate_avs_response 
-        if CardConnectGateway.configuration.require_avs_zip_code_match
-          self.errors[:postal] = "unknown error." if zip_match.nil?
-          self.errors[:postal] = "doesn't match." if zip_match == false
-        end
-        if CardConnectGateway.configuration.require_avs_address_match
-          self.errors[:address] = "unknown error." if address_match.nil?
-          self.errors[:address] = "doesn't match." if address_match == false
-        end
-        if CardConnectGateway.configuration.require_avs_customer_name_match
-          self.errors[:name] = "unknown error." if customer_name_match.nil?
-          self.errors[:name] = "doesn't match." if customer_name_match == false
+        if errors.empty? and check_avs
+          # card connect doesn't appear to even do AVS if the are other errors
+          validate_avs_response 
+          if CardConnectGateway.configuration.require_avs_zip_code_match
+            self.errors[:postal] = "unknown error." if zip_match.nil?
+            self.errors[:postal] = "doesn't match." if zip_match == false
+          end
+          if CardConnectGateway.configuration.require_avs_address_match
+            self.errors[:address] = "unknown error." if address_match.nil?
+            self.errors[:address] = "doesn't match." if address_match == false
+          end
+          if CardConnectGateway.configuration.require_avs_customer_name_match
+            self.errors[:name] = "unknown error." if customer_name_match.nil?
+            self.errors[:name] = "doesn't match." if customer_name_match == false
+          end
         end
 
         @validated = true
@@ -76,6 +78,7 @@ module CardConnectGateway
 
       def validate_avs_response
         # http://www.cardconnect.com/developer/docs/#address-verification-system
+        # left empty if blocks in this function so it could easily be compared to the card connect documentation
 
         self.zip_match = nil
         self.address_match = nil
