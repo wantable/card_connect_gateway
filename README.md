@@ -101,7 +101,7 @@ response = CardConnectGateway.authorization({
   account: '4788250000121443',
   expiry: '0921',
   cvv2: '112',
-  postal: '19406'm
+  postal: '19406'
   capture: true,
   amount: 20
 })
@@ -115,6 +115,27 @@ void.valid?
 
 ```
 
+#### Refund ####
+
+``` ruby
+response = CardConnectGateway.authorization({
+  account: '4788250000121443',
+  expiry: '0921',
+  cvv2: '112',
+  postal: '19406'
+  capture: true,
+  amount: 20
+})
+
+refund = CardConnectGateway.refund({
+  retref: auth.retref
+})
+
+refund.valid?
+# can't actually process one of these because you have to wait 24 hours
+refund.errors 
+  => {PPS: "Txn not settled"}
+```
 
 ### Compile CoffeeScript with Grunt ###
 first install grunt
