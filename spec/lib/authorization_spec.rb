@@ -8,11 +8,12 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
+    request.validate
+    expect(request.errors).to eq({})
     expect(request.account).to eq(VISA_APPROVAL_ACCOUNT)
     expect(request.expiry).to eq('0921')
     expect(request.merchid).to eq(CardConnectGateway.configuration.merchant_id) 
-    expect(request.validate).to eq(true)
-    expect(request.errors).to eq({})
+    
   end
 
   it 'request validates with month/year' do

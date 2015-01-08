@@ -1,5 +1,6 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
+  grunt.loadNpmTasks('grunt-template')
   grunt.loadNpmTasks('grunt-contrib-watch')
 
   grunt.initConfig
@@ -21,3 +22,9 @@ module.exports = (grunt) ->
               src.replace("/javascripts/", "/javascripts/compiled/")
           }
         ]
+
+    template_runner: {
+      files: {
+        'spec/javascripts/ajax_tokenizer_spec.js.coffee': ['spec/javascripts/ajax_tokenizer_spec.js.coffee.erb']
+      }
+    }

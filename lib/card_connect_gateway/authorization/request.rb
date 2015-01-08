@@ -9,15 +9,16 @@ module CardConnectGateway
                     :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture, :profile
 
       CARD_TYPES = {
-        VISA => /^4[0-9]{12}(?:[0-9]{3})?$/,
-        MASTERCARD => /^5[1-5][0-9]{14}$/,
-        MAESTRO => /(^6759[0-9]{2}([0-9]{10})$)|(^6759[0-9]{2}([0-9]{12})$)|(^6759[0-9]{2}([0-9]{13})$)/,
-        DINERS_CLUB => /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
-        AMEX => /^3[47][0-9]{13}$/,
-        DISCOVER => /^6(?:011|5[0-9]{2})[0-9]{12}$/,
-        JCB => /^(?:2131|1800|35\d{3})\d{11}$/
+        VISA              => /^4\d{12}(\d{3})?$/,
+        MASTERCARD        => /^(5[1-5]\d{4}|677189)\d{10}$/,
+        DISCOVER          => /^(6011|65\d{2}|64[4-9]\d)\d{12}|(62\d{14})$/,
+        AMEX              => /^3[47]\d{13}$/,
+        DINERS_CLUB       => /^3(0[0-5]|[68]\d)\d{11}$/,
+        JCB               => /^35(28|29|[3-8]\d)\d{12}$/,
+        MAESTRO           => /^(5[06-8]|6\d)\d{10,17}$/
       }
-      # borrowed from https://github.com/tobias/credit_card_validator/blob/master/lib/credit_card_validator/validator.rb
+      # from https://github.com/Shopify/active_merchant/blob/master/lib/active_merchant/billing/credit_card_methods.rb
+      
 
       def self.resource_name
         'auth'
