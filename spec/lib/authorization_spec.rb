@@ -8,11 +8,12 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
+    request.validate
+    expect(request.errors).to eq({})
     expect(request.account).to eq(VISA_APPROVAL_ACCOUNT)
     expect(request.expiry).to eq('0921')
     expect(request.merchid).to eq(CardConnectGateway.configuration.merchant_id) 
-    expect(request.validate).to eq(true)
-    expect(request.errors).to eq({})
+    
   end
 
   it 'request validates with month/year' do
@@ -54,9 +55,10 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
-    expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
-    expect(response.valid?).to eq(true)
+    response.validate
     expect(response.errors).to eq({}) 
+    expect(response.valid?).to eq(true)
+    expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
   end
 
   it 'auth fail with refer call' do
@@ -173,11 +175,13 @@ describe "Authorization" do
     auth2 = CardConnectGateway.authorization({
       profile: profileid,
       amount: 36,
-      check_cvv: false,
+      check_cvv: false, # cvv and avs were already validated in the first auth. ignore them now
+      check_avs: false,
       capture: true
     })
-    expect(auth2.valid?).to eq(true)
+    auth2.validate
     expect(auth2.errors).to eq({}) 
+    expect(auth2.valid?).to eq(true)
   end
 
   it 'check card types' do 
@@ -313,7 +317,6 @@ describe "Authorization" do
     expect(request.errors[:card_type]).to eq('is not supported.')
   end
 
-=begin
   it 'avs responses with only zip code match required' do
 
     CardConnectGateway.configure do |config|
@@ -497,5 +500,4 @@ describe "Authorization" do
     expect(response.valid?).to eq(true)
 
   end
-=end
 end

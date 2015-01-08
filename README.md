@@ -31,15 +31,113 @@ config/initializers/card_connect_gateway.rb
 
 ```
 
-setup ajax tokenizer
-```javascript
+setup ajax tokenizer (if using)
 
-CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
+```html
+<script type="text/javascript">
+    CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
+</script>
+```
+
+### Example Usage ###
+
+#### Authorizations ####
+```ruby
+
+response = CardConnectGateway.authorization({
+  account: '4788250000121443',
+  expiry: '0921',
+  cvv2: '112',
+  postal: '19406'
+})
+response.valid?
+#  => true 
+
+
+response = CardConnectGateway.authorization({
+  account: '5454545454545454',
+  expiry: '0921',
+  cvv2: '112',
+  amount: 20,
+  postal: '19111'
+})
+response.valid?
+response.errors
+#  => {:postal=>"doesn't match."} 
+
+response.card_type
+#  => "MasterCard" 
 
 ```
 
+#### Profile ####
 
-### Compile CoffeeScript with Grunt
+```ruby
+# create
+response = CardConnectGateway.create_profile({
+  account: '4788250000121443',
+  expiry: '0921'
+})
+response.valid? 
+#  => true
+
+# update
+response2 = CardConnectGateway.update_profile({
+  account: '5454545454545454',
+  expiry_month: 9,
+  expiry_year: 10,
+  profile: response.profileid
+})
+response.valid? 
+#  => true
+
+```
+
+#### Void ####
+
+```ruby
+
+response = CardConnectGateway.authorization({
+  account: '4788250000121443',
+  expiry: '0921',
+  cvv2: '112',
+  postal: '19406'
+  capture: true,
+  amount: 20
+})
+
+void = CardConnectGateway.void({
+  retref: auth.retref
+})
+
+void.valid?
+#  => true
+
+```
+
+#### Refund ####
+
+``` ruby
+response = CardConnectGateway.authorization({
+  account: '4788250000121443',
+  expiry: '0921',
+  cvv2: '112',
+  postal: '19406'
+  capture: true,
+  amount: 20
+})
+
+refund = CardConnectGateway.refund({
+  retref: auth.retref
+})
+
+refund.valid?
+# can't actually process one of these because you have to wait 24 hours
+refund.errors 
+#  => {PPS: "Txn not settled"}
+```
+
+### Compile CoffeeScript with Grunt ###
 first install grunt
 
 ```
@@ -53,7 +151,7 @@ run ```$ grunt watch```
 
 ### Run Tests ###
 
-rspec
+**rspec**
 
 ``` 
   $ rake test
@@ -63,5 +161,5 @@ rspec
   4 examples, 0 failures
 ```
 
-jasmine
+**jasmine**
 ``` $ rake jasmine ``` and visit localhost:8888
