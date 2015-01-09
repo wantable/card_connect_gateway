@@ -26,10 +26,7 @@ describe "cardConnect", ->
 
     it "gets token", inject( -> 
 
-      httpBackend.whenJSONP("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{VISA_APPROVAL_ACCOUNT}").respond({
-        data: "47-hzj9xh9N-1443",
-        action: "CE"
-      })
+      httpBackend.whenGET("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{VISA_APPROVAL_ACCOUNT}").respond('processToken( { "action" : "CE", "data" : "47-hzj9xh9N-1443" } )')
 
       ajaxTokenizer.tokenize(VISA_APPROVAL_ACCOUNT).then((tokenizedCard) ->
         expect(tokenizedCard.token.substr(0,2)).toEqual(VISA_APPROVAL_ACCOUNT.substr(0,2))

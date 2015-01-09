@@ -10,6 +10,11 @@ require 'card_connect_gateway/profile'
 require 'card_connect_gateway/refund'
 
 module CardConnectGateway
+  module Rails
+    if defined? ::Rails::Engine
+      require "card_connect_gateway/engine"
+    end
+  end
 
   def self.configuration
     @configuration ||=  Configuration.new

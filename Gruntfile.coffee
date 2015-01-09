@@ -7,7 +7,7 @@ module.exports = (grunt) ->
     watch:
       coffee:
         files: [
-          'public/javascripts/*.coffee', 'spec/javascripts/*.coffee'
+          'app/assets/javascripts/*.coffee', 'spec/javascripts/*.coffee'
         ]
         tasks: ['coffee:compile']
 
@@ -16,10 +16,8 @@ module.exports = (grunt) ->
         files: [
           {
             expand: true,
-            src: ['public/javascripts/*.coffee', 'spec/javascripts/*.coffee'],
-            ext: '.js',
-            rename: (dest, src) ->
-              src.replace("/javascripts/", "/javascripts/compiled/")
+            src: ['app/assets/javascripts/*.coffee', 'spec/javascripts/*.coffee'],
+            ext: '.js'
           }
         ]
 

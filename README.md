@@ -137,6 +137,16 @@ refund.errors
 #  => {PPS: "Txn not settled"}
 ```
 
+#### Ajax tokenizer in angular ####
+
+```coffee
+window.CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
+Wantable = angular.module('Wantable', [ 'cardConnect'])
+Wantable.controller 'CreditCardController',  (ajaxTokenizer) ->  
+  ajaxTokenizer.tokenize('4788250000121443').then((tokenizedCard) ->
+    # tokenizedCard => 
+  )
+
 ### Compile CoffeeScript with Grunt ###
 first install grunt
 

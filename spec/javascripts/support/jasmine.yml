@@ -10,8 +10,7 @@ spec_files:
 src_files:
   - vendor/javascripts/angular.js
   - vendor/javascripts/angular-mocks.js
-  - public/javascripts/*.js
-  - public/javascripts/compiled/*.js
+  - app/assets/javascripts/*.js
 helpers:
   - 'helpers/*.js'
 
