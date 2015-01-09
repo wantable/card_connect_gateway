@@ -19,12 +19,10 @@ module CardConnectGateway
     def initialize(options={})
       self.errors = {}
 
-      
       if options[:expiry] and respond_to?(:expiry_month=) and respond_to?(:expiry_year=)
         options[:expiry_month] = options[:expiry][0..1]
         options[:expiry_year] = options[:expiry][2..4]
       end
-      super(options)
 
       options.each do |key, value|
         set_value(key, value)
