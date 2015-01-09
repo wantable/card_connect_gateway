@@ -14,19 +14,19 @@ module CardConnectGateway
         if value.nil? or value.empty?
           req = validations[:required]
           if req == true or (req.class == Proc and req.call(self) == true)
-            self.errors[key] = 'is required.'
+            self.errors[key] = I18n.t(:is_required)
           end
         else 
           if maxLength = validations[:maxLength]
-            self.errors[key] = "cannot be longer than #{maxLength}." if value.length > maxLength
+            self.errors[key] = I18n.t(:cannot_be_longer_than, maxLength: maxLength) if value.length > maxLength
           end
 
           if options = validations[:options]
-            self.errors[key] = "must be one of #{options.join(", ")}." if !options.include?(value)
+            self.errors[key] = I18n.t(:must_be_one_of, options: options) if !options.include?(value)
           end
 
           if format = validations[:format]
-            self.errors[key] = "doesn't match the format." if !(format =~ value)
+            self.errors[key] = I18n.t(:doesnt_match_the_format) if !(format =~ value)
           end
         end
       end
@@ -42,6 +42,16 @@ module CardConnectGateway
 
     def initialize(options={})
       options[:merchid] ||= CardConnectGateway.configuration.merchant_id if respond_to?(:merchid)
+
+      # allow setting expiration in parts
+      if respond_to?(:expiry) and !options[:expiry] and month = options.delete(:expiry_month) and year = options.delete(:expiry_year)
+        options[:expiry] = "#{sprintf('%02d', month.to_i)}#{sprintf('%02d', year.to_i)}"
+      end
+
+      # normalize amount into format "20.01"
+      if respond_to?(:amount) and options[:amount] and options[:amount].class != String
+        options[:amount] = (options[:amount] * 100).to_i
+      end
 
       self.class.attributes.each do |key, validations|
         set_value(key, validations[:default])

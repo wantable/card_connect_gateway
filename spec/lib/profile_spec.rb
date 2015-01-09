@@ -27,16 +27,16 @@ describe "Profile" do
   it 'fail validation' do
     request = CardConnectGateway::Profile::Request.new({tokenize: 'A', expiry: 'asdf'})
     expect(request.validate).to eq(false)
-    expect(request.errors[:account]).to eq('is required.')
-    expect(request.errors[:expiry]).to eq("doesn't match the format.")
+    expect(request.errors[:account]).to eq(I18n.t(:is_required))
+    expect(request.errors[:expiry]).to eq(I18n.t(:doesnt_match_the_format))
   end
 
 
   it 'fail validation from create' do
     request = CardConnectGateway.create_profile({tokenize: 'A', expiry: 'asdf'})
     expect(request.validate).to eq(false)
-    expect(request.errors[:account]).to eq('is required.')
-    expect(request.errors[:expiry]).to eq("doesn't match the format.")
+    expect(request.errors[:account]).to eq(I18n.t(:is_required))
+    expect(request.errors[:expiry]).to eq(I18n.t(:doesnt_match_the_format))
     
     expect(request.class.name).to eq(CardConnectGateway::Profile::Request.name) 
   end
@@ -80,7 +80,7 @@ describe "Profile" do
       expiry: '0921'
     })
     expect(response.valid?).to eq(false)
-    expect(response.errors[:profile]).to eq('is required.')
+    expect(response.errors[:profile]).to eq(I18n.t(:is_required))
 
   end
 

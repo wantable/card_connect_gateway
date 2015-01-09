@@ -43,15 +43,15 @@ module CardConnectGateway
           if resptext and !resptext.empty? and respproc and !respproc.empty?
             self.errors[respproc.to_sym] = resptext 
           else
-            self.errors["Card Connect Gateway"] = "Unknown error."
+            self.errors["Card Connect Gateway"] = I18n.t(:unknown_error)
           end
         end
 
         if check_cvv
           if cvvresp == CVV_NO_MATCH or cvvresp == CVV_MISSING
-            self.errors[:cvv2] = "Doesn't match."
-          elsif cvvresp == CVV_NOT_PROCESSED or cvvresp == CVV_NO_RESPONSE
-            self.errors[:cvv2] = "Unknown error."
+            self.errors[:cvv2] = I18n.t(:doesnt_match)
+          elsif cvvresp == CVV_NOT_PROCESSED or cvvresp == CVV_NO_RESPONSE or cvvresp == CVV_UNKNOWN_OR_NO_PARTICIPATE
+            self.errors[:cvv2] = I18n.t(:unknown_error)
           end
         end
 
@@ -59,16 +59,16 @@ module CardConnectGateway
           # card connect doesn't appear to even do AVS if the are other errors
           validate_avs_response 
           if CardConnectGateway.configuration.require_avs_zip_code_match
-            self.errors[:postal] = "unknown error." if zip_match.nil?
-            self.errors[:postal] = "doesn't match." if zip_match == false
+            self.errors[:postal] = I18n.t(:unknown_error) if zip_match.nil?
+            self.errors[:postal] = I18n.t(:doesnt_match) if zip_match == false
           end
           if CardConnectGateway.configuration.require_avs_address_match
-            self.errors[:address] = "unknown error." if address_match.nil?
-            self.errors[:address] = "doesn't match." if address_match == false
+            self.errors[:address] = I18n.t(:unknown_error) if address_match.nil?
+            self.errors[:address] = I18n.t(:doesnt_match) if address_match == false
           end
           if CardConnectGateway.configuration.require_avs_customer_name_match
-            self.errors[:name] = "unknown error." if customer_name_match.nil?
-            self.errors[:name] = "doesn't match." if customer_name_match == false
+            self.errors[:name] = I18n.t(:unknown_error) if customer_name_match.nil?
+            self.errors[:name] = I18n.t(:doesnt_match) if customer_name_match == false
           end
         end
 

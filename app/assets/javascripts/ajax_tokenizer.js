@@ -27,7 +27,9 @@
       this.tokenize = function(number) {
         var deferred;
         deferred = $q.defer();
-        $http.jsonp("https://" + $window.CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + number).success(function(data, status, headers, config) {
+        $http.get("https://" + $window.CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + number).success(function(responseText, status, headers, config) {
+          var data;
+          data = JSON.parse(responseText.substring(14, responseText.length - 2));
           return deferred.resolve({
             token: data.data,
             last_four: data.data.substr(data.data.length - 4, 4),

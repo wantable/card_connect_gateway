@@ -70,6 +70,8 @@ response.card_type
 
 ```
 
+*NOTE: if authorizing from a token you must fill in card_type as well*
+
 #### Profile ####
 
 ```ruby
@@ -137,6 +139,18 @@ refund.errors
 #  => {PPS: "Txn not settled"}
 ```
 
+#### Ajax tokenizer in angular ####
+
+app/assets/javascripts/application.js.coffee.erb
+```coffee
+#= require ajax_tokenizer
+
+Wantable = angular.module('Wantable', [ 'cardConnect'])
+Wantable.controller 'CreditCardController',  (ajaxTokenizer) ->  
+  ajaxTokenizer.tokenize('4788250000121443').then((tokenizedCard) ->
+    # tokenizedCard => 
+  )
+
 ### Compile CoffeeScript with Grunt ###
 first install grunt
 
@@ -154,7 +168,7 @@ run ```$ grunt watch```
 **rspec**
 
 ``` 
-  $ rake test
+  $ CARD_CONNECT_MERCHANT_ID=[MERCHANT_ID] CARD_CONNECT_USER_ID=[USER_ID] CARD_CONNECT_PASSWORD=[PASSWORD] rake test
   ....
 
   Finished in 0.00142 seconds (files took 0.09582 seconds to load)

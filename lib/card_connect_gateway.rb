@@ -9,7 +9,18 @@ require 'card_connect_gateway/void'
 require 'card_connect_gateway/profile'
 require 'card_connect_gateway/refund'
 
+require 'i18n'
+
+I18n.load_path = Dir['config/locales/*.yml']
+I18n.backend.load_translations
+
+
 module CardConnectGateway
+  module Rails
+    if defined? ::Rails::Engine
+      require "card_connect_gateway/engine"
+    end
+  end
 
   def self.configuration
     @configuration ||=  Configuration.new
