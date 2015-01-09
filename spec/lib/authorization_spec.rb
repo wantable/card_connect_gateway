@@ -133,6 +133,19 @@ describe "Authorization" do
     expect(fail.errors).to eq({cvv2: "Unknown error."}) 
   end
 
+
+  it 'auth fail with cvv unknown' do
+    fail = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      cvv2: CVV_UNKNOWN,
+      expiry: '0921',
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    expect(fail.valid?).to eq(false)
+    expect(fail.errors).to eq({cvv2: "Unknown error."}) 
+  end
+
   it 'auth fail with bad zip' do
     fail = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,

@@ -26,7 +26,7 @@ MASTERCARD_AVS_MISMATCH = '19112'
 CVV_MATCH = '112'
 CVV_MISMATCH = '111'
 CVV_NOT_PROCESSED = '222'
-CVV_UNKOWN = '333'
+CVV_UNKNOWN = '333'
 
 RSpec.configure do |config|
   config.before(:each) {

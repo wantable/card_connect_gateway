@@ -50,7 +50,7 @@ module CardConnectGateway
         if check_cvv
           if cvvresp == CVV_NO_MATCH or cvvresp == CVV_MISSING
             self.errors[:cvv2] = "Doesn't match."
-          elsif cvvresp == CVV_NOT_PROCESSED or cvvresp == CVV_NO_RESPONSE
+          elsif cvvresp == CVV_NOT_PROCESSED or cvvresp == CVV_NO_RESPONSE or cvvresp == CVV_UNKNOWN_OR_NO_PARTICIPATE
             self.errors[:cvv2] = "Unknown error."
           end
         end

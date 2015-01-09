@@ -25,8 +25,11 @@
     this.tokenize = (number) ->
       deferred = $q.defer()
       $http.get("https://#{$window.CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{number}").success((responseText, status, headers, config) ->
-        # this returns a JSONP response but doesn't set the correct content-type on the headers so we have to process it as text and parse it
-
+        # this returns a JSONP response processToken( { "action" : "CE", "data" : "actual token" } ) 
+        # but they don't set the content-type header correctly so we can't use $http.jsonp
+        # instead we can do a straight GET and process it from text. 14 is the length of "processToken( "
+        # a bit brittle but they didn't leave us much choice
+        
         data = JSON.parse(responseText.substring(14, responseText.length - 2));
         deferred.resolve({token: data.data, last_four: data.data.substr(data.data.length-4, 4), card_type: getCardType(number)})
       ).error((data, status, headers, config) ->
