@@ -64,6 +64,14 @@ module CardConnectGateway
       end
     end
 
+    def to_hash
+      self.class.attributes.keys.inject({}) do |hash, key|
+        value = get_value(key)
+        hash[key] = value if value
+        hash
+      end
+    end
+
     private 
 
     def validate_attribute(key, validations=[])
@@ -92,14 +100,6 @@ module CardConnectGateway
       url = "https://#{CardConnectGateway.configuration.user_id}:#{CardConnectGateway.configuration.password}@"
       url += "#{CardConnectGateway.configuration.url.gsub("http://","").gsub("https://","")}/#{self.class.resource_name}"
       url
-    end
-
-    def to_hash
-      self.class.attributes.keys.inject({}) do |hash, key|
-        value = get_value(key)
-        hash[key] = value if value
-        hash
-      end
     end
 
   end
