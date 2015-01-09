@@ -75,15 +75,6 @@ module CardConnectGateway
           }
         }
       end
-
-      def initialize(options={})
-        if !options[:expiry] and month = options.delete(:expiry_month) and year = options.delete(:expiry_year)
-          options[:expiry] = "#{sprintf('%02d', month.to_i)}#{sprintf('%02d', year.to_i)}"
-        end
-
-        super(options)
-      end
-
     end
   end
 end

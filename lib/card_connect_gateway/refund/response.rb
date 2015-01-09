@@ -11,7 +11,7 @@ module CardConnectGateway
           if resptext and !resptext.empty? and respproc and !respproc.empty?
             self.errors[respproc.to_sym] = resptext 
           else
-            self.errors["Card Connect Gateway"] = "Unknown error."
+            self.errors["Card Connect Gateway"] = I18n(:unknown_error)
           end
         end
 

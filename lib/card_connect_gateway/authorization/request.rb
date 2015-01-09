@@ -136,24 +136,12 @@ module CardConnectGateway
         @card_type = card_type
       end
 
-      def initialize(options={})
-        if !options[:expiry] and month = options.delete(:expiry_month) and year = options.delete(:expiry_year)
-          options[:expiry] = "#{sprintf('%02d', month.to_i)}#{sprintf('%02d', year.to_i)}"
-        end
-
-        if options[:amount] and options[:amount].class != String
-          options[:amount] = (options[:amount] * 100).to_i
-        end
-
-        super(options)
-      end
-
       def validate
         if !has_profile_id? # card type required if no profile id supplied
           if card_type.nil?
-            self.errors[:account] = 'is not valid.'
+            self.errors[:account] = I18n.t(:is_not_valid)
           elsif !CardConnectGateway.configuration.supported_card_types.include?(card_type)
-            self.errors[:card_type] = 'is not supported.'
+            self.errors[:card_type] = I18n.t(:is_not_supported)
           end
         end
         super

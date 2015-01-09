@@ -32,18 +32,18 @@ describe "Authorization" do
   it 'fail validation' do
     request = CardConnectGateway::Authorization::Request.new({tokenize: 'A', expiry: 'asdf'})
     expect(request.validate).to eq(false)
-    expect(request.errors[:account]).to eq('is required.')
-    expect(request.errors[:tokenize]).to eq('must be one of Y, N.')
-    expect(request.errors[:expiry]).to eq("doesn't match the format.")
+    expect(request.errors[:account]).to eq(I18n.t(:is_required))
+    expect(request.errors[:tokenize]).to eq(I18n.t(:must_be_one_of, options: CardConnectGateway::Authorization::Request.attributes[:tokenize][:options]))
+    expect(request.errors[:expiry]).to eq(I18n.t(:doesnt_match_the_format))
   end
 
 
   it 'fail validation from auth' do
     request = CardConnectGateway.authorization({tokenize: 'A', expiry: 'asdf'})
 
-    expect(request.errors[:account]).to eq('is required.')
-    expect(request.errors[:tokenize]).to eq('must be one of Y, N.')
-    expect(request.errors[:expiry]).to eq("doesn't match the format.")
+    expect(request.errors[:account]).to eq(I18n.t(:is_required))
+    expect(request.errors[:tokenize]).to eq(I18n.t(:must_be_one_of, options: CardConnectGateway::Authorization::Request.attributes[:tokenize][:options]))
+    expect(request.errors[:expiry]).to eq(I18n.t(:doesnt_match_the_format))
     
     expect(request.class.name).to eq(CardConnectGateway::Authorization::Request.name) 
   end
@@ -118,7 +118,7 @@ describe "Authorization" do
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
-    expect(fail.errors).to eq({cvv2: "Doesn't match."}) 
+    expect(fail.errors).to eq({cvv2: I18n.t(:doesnt_match)}) 
   end
 
   it 'auth fail with cvv not processed' do
@@ -130,7 +130,7 @@ describe "Authorization" do
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
-    expect(fail.errors).to eq({cvv2: "Unknown error."}) 
+    expect(fail.errors).to eq({cvv2: I18n.t(:unknown_error)}) 
   end
 
 
@@ -143,7 +143,7 @@ describe "Authorization" do
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
-    expect(fail.errors).to eq({cvv2: "Unknown error."}) 
+    expect(fail.errors).to eq({cvv2: I18n.t(:unknown_error)}) 
   end
 
   it 'auth fail with bad zip' do
@@ -260,7 +260,7 @@ describe "Authorization" do
       expiry: '0921'
     })
     expect(request.valid?).to eq(false)
-    expect(request.errors[:account]).to eq('is not valid.')
+    expect(request.errors[:account]).to eq(I18n.t(:is_not_valid))
   end
 
   it 'check card type on response' do 
@@ -317,35 +317,35 @@ describe "Authorization" do
     })
     expect(request.card_type).to eq(CardConnectGateway::Base::MASTERCARD)
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:card_type]).to eq(I18n.t(:is_not_supported))
 
     request = CardConnectGateway::Authorization::Request.new({
       account: AMEX_APPROVAL_ACCOUNT
     })
     expect(request.card_type).to eq(CardConnectGateway::Base::AMEX)
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:card_type]).to eq(I18n.t(:is_not_supported))
 
     request = CardConnectGateway::Authorization::Request.new({
       account: DISCOVER_APPROVAL_ACCOUNT
     })
     expect(request.card_type).to eq(CardConnectGateway::Base::DISCOVER)
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:card_type]).to eq(I18n.t(:is_not_supported))
 
     request = CardConnectGateway::Authorization::Request.new({
       account: DINERS_APPROVAL_ACCOUNT
     })
     expect(request.card_type).to eq(CardConnectGateway::Base::DINERS_CLUB)
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:card_type]).to eq(I18n.t(:is_not_supported))
 
     request = CardConnectGateway::Authorization::Request.new({
       account: JCB_APPROVAL_ACCOUNT
     })
     expect(request.card_type).to eq(CardConnectGateway::Base::JCB)
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:card_type]).to eq(I18n.t(:is_not_supported))
 
     request = CardConnectGateway::Authorization::Request.new({
       account: '1234567890123456', # not a real number
@@ -353,7 +353,7 @@ describe "Authorization" do
     })
     expect(request.card_type).to be_nil
     expect(request.valid?).to eq(false)
-    expect(request.errors[:account]).to eq('is not valid.')
+    expect(request.errors[:account]).to eq(I18n.t(:is_not_valid))
   end
 
   it 'avs responses with only zip code match required' do

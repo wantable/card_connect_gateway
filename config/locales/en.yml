@@ -1,0 +1,9 @@
+en:
+  is_not_valid: is not valid.
+  is_required: is required.
+  cannot_be_longer_than: cannot be longer than #{maxLength}.
+  must_be_one_of: must be one of #{options.join(", ")}.
+  doesnt_match_the_format: doesn't match the format.
+  unknown_error: unknown error.
+  doesnt_match: doesn't match.
+  is_not_supported: is not supported.
