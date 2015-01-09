@@ -184,6 +184,32 @@ describe "Authorization" do
     expect(auth2.valid?).to eq(true)
   end
 
+
+  it 'auth and capture from token' do
+    auth = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+
+    token = auth.token
+    auth2 = CardConnectGateway.authorization({
+      account: token,
+      expiry: '0921',
+      profile: true,
+      cvv2: CVV_MATCH,
+      card_type: CardConnectGateway::Base::VISA,
+      postal: VISA_AVS_MATCH_ZIP,
+      amount: 36,
+      capture: true
+    })
+    auth2.validate
+    expect(auth2.errors).to eq({}) 
+    expect(auth2.valid?).to eq(true)
+  end
+
   it 'check card types' do 
     request = CardConnectGateway::Authorization::Request.new({
       account: VISA_APPROVAL_ACCOUNT
@@ -221,7 +247,7 @@ describe "Authorization" do
       expiry: '0921'
     })
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:account]).to eq('is not valid.')
   end
 
   it 'check card type on response' do 
@@ -314,7 +340,7 @@ describe "Authorization" do
     })
     expect(request.card_type).to be_nil
     expect(request.valid?).to eq(false)
-    expect(request.errors[:card_type]).to eq('is not supported.')
+    expect(request.errors[:account]).to eq('is not valid.')
   end
 
   it 'avs responses with only zip code match required' do

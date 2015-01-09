@@ -124,11 +124,16 @@ module CardConnectGateway
       end
 
       def card_type
+        return @card_type if @card_type
         return nil if account.nil? or account.empty?
         CARD_TYPES.keys.each do |t|
           return t if card_is(t)
         end
         nil
+      end
+
+      def card_type=(card_type)
+        @card_type = card_type
       end
 
       def initialize(options={})
@@ -145,7 +150,9 @@ module CardConnectGateway
 
       def validate
         if !has_profile_id? # card type required if no profile id supplied
-          if !CardConnectGateway.configuration.supported_card_types.include?(card_type)
+          if card_type.nil?
+            self.errors[:account] = 'is not valid.'
+          elsif !CardConnectGateway.configuration.supported_card_types.include?(card_type)
             self.errors[:card_type] = 'is not supported.'
           end
         end

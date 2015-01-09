@@ -70,6 +70,8 @@ response.card_type
 
 ```
 
+*NOTE: if authorizing from a token you must fill in card_type as well*
+
 #### Profile ####
 
 ```ruby
@@ -139,8 +141,12 @@ refund.errors
 
 #### Ajax tokenizer in angular ####
 
+app/assets/javascripts/application.js.coffee.erb
 ```coffee
+#= require ajax_tokenizer
+
 window.CARDCONNECT_AJAX_URL = CardConnectGateway.configuration.ajax_url
+
 Wantable = angular.module('Wantable', [ 'cardConnect'])
 Wantable.controller 'CreditCardController',  (ajaxTokenizer) ->  
   ajaxTokenizer.tokenize('4788250000121443').then((tokenizedCard) ->
@@ -164,7 +170,7 @@ run ```$ grunt watch```
 **rspec**
 
 ``` 
-  $ rake test
+  $ CARD_CONNECT_MERCHANT_ID=[MERCHANT_ID] CARD_CONNECT_USER_ID=[USER_ID] CARD_CONNECT_PASSWORD=[PASSWORD] rake test
   ....
 
   Finished in 0.00142 seconds (files took 0.09582 seconds to load)
