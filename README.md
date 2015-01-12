@@ -162,7 +162,8 @@ $ npm install grunt-contrib-coffee --save-dev
 $ npm install grunt-contrib-watch --save-dev
 ```
 
-run ```$ grunt watch```
+then tell grunt to watch coffeescript files and rebuild them as they are changed with ```$ grunt watch```
+to force a coffeescript build call ```$ grunt coffee```
 
 
 ### Run Tests ###
@@ -170,12 +171,13 @@ run ```$ grunt watch```
 **rspec**
 
 ``` 
-  $ CARD_CONNECT_MERCHANT_ID=[MERCHANT_ID] CARD_CONNECT_USER_ID=[USER_ID] CARD_CONNECT_PASSWORD=[PASSWORD] rake test
-  ....
+$ CARD_CONNECT_MERCHANT_ID=[MERCHANT_ID] CARD_CONNECT_USER_ID=[USER_ID] CARD_CONNECT_PASSWORD=[PASSWORD] rake test
+....
 
-  Finished in 0.00142 seconds (files took 0.09582 seconds to load)
-  4 examples, 0 failures
+Finished in 0.00142 seconds (files took 0.09582 seconds to load)
+4 examples, 0 failures
 ```
 
 **jasmine**
+
 ``` $ rake jasmine ``` and visit localhost:8888
