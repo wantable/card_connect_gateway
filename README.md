@@ -151,6 +151,8 @@ Wantable.controller 'CreditCardController',  (ajaxTokenizer) ->
     # tokenizedCard => 
   )
 
+```
+
 ### Compile CoffeeScript with Grunt ###
 first install grunt
 
