@@ -3,7 +3,7 @@ module CardConnectGateway
     TEST_URL = 'fts.prinpay.com:6443/cardconnect/rest'
     TEST_AJAX_URL = 'fts.prinpay.com:6443/cardsecure/cs'
 
-    PRODUCTION_URL = 'fts.prinpay.com/cardconnect/rest'
+    PRODUCTION_URL = 'fts.prinpay.com:8443/cardconnect/rest'
     PRODUCTION_AJAX_URL = 'fts.prinpay.com/cardsecure/cs'
     
     attr_accessor :merchant_id, :user_id, :password, :test_mode, :url, :debug, :supported_card_types, :require_avs_zip_code_match, :require_avs_address_match, :require_avs_customer_name_match, :ajax_url
