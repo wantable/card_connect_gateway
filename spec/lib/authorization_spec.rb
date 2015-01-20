@@ -61,6 +61,20 @@ describe "Authorization" do
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
   end
 
+  it 'international cards' do
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      cvv2: CVV_MATCH,
+      postal: '2060',
+      country: 'CA'
+    })
+    response.validate
+    expect(response.errors).to eq({}) 
+    expect(response.valid?).to eq(true)
+    expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+  end
+
   it 'auth fail with refer call' do
     fail = CardConnectGateway.authorization({
       account: VISA_REFER_CALL_ACCOUNT,

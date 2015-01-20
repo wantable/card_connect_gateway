@@ -181,3 +181,8 @@ Finished in 0.00142 seconds (files took 0.09582 seconds to load)
 **jasmine**
 
 ``` $ rake jasmine ``` and visit localhost:8888
+
+### Notes ###
+
+If you're doing international payments you have to set the country on authorize. Otherwise it defaults to US.
+
