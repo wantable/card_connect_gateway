@@ -16,8 +16,14 @@ module CardConnectGateway
       self.require_avs_address_match = false
       self.require_avs_customer_name_match = false
 
-      self.url = test_mode ? TEST_URL : PRODUCTION_URL
-      self.ajax_url = test_mode ? TEST_AJAX_URL : PRODUCTION_AJAX_URL
+    end
+
+    def self.url
+      test_mode ? TEST_URL : PRODUCTION_URL
+    end
+
+    def self.ajax_url
+      test_mode ? TEST_AJAX_URL : PRODUCTION_AJAX_URL
     end
   end
 end
