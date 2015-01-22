@@ -129,6 +129,10 @@ module CardConnectGateway
         when G 
           if card_type == VISA or card_type == DISCOVER
             # Address information not verified for international transaction
+            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
+            #   so we have to allow it through
+            self.address_match = true 
+            self.zip_match = true
           end
         when I 
           if card_type == VISA 
@@ -172,6 +176,8 @@ module CardConnectGateway
         when S 
           if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER
             # Issuer Does Not Support Address Verification
+            self.address_match = true 
+            self.zip_match = true
           end
         when T 
           if card_type == DISCOVER 
