@@ -137,6 +137,10 @@ module CardConnectGateway
         when I 
           if card_type == VISA 
             # Address information not verified
+            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
+            #   so we have to allow it through
+            self.address_match = true 
+            self.zip_match = true
           end
         when K 
           if card_type == AMEX 
@@ -187,10 +191,18 @@ module CardConnectGateway
         when U 
           if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER
             # Address Information Is Unavailable
+            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
+            #   so we have to allow it through
+            self.address_match = true 
+            self.zip_match = true
           end
         when W 
           if card_type == DISCOVER 
             # No data from Issuer/Authorization system
+            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
+            #   so we have to allow it through
+            self.address_match = true 
+            self.zip_match = true
           elsif card_type == AMEX
             # No, Cardmember Name, Billing Address and Postal Code are all incorrect
             self.address_match = false
