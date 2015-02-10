@@ -1,4 +1,4 @@
-module CardConnect
+module CardConnectGateway
   module Rails
     class Engine < ::Rails::Engine
     end

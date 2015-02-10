@@ -60,7 +60,7 @@ module CardConnectGateway
         JSON.parse(response)
       rescue => e
         puts "error: #{e}"  if CardConnectGateway.configuration.debug
-        e
+        raise e
       end
     end
 
@@ -76,22 +76,22 @@ module CardConnectGateway
 
     def validate_attribute(key, validations=[])
       value = get_value(key)
-      if value.nil? or value.empty?
+      if value.blank?
         req = validations[:required]
         if req == true or (req.class == Proc and req.call(self) == true)
           self.errors[key] = I18n.t(:is_required)
         end
       else 
-        if maxLength = validations[:maxLength]
-          self.errors[key] = I18n.t(:cannot_be_longer_than, maxLength: maxLength) if value.length > maxLength
+        if maxLength = validations[:maxLength] and value.length > maxLength
+          self.errors[key] = I18n.t(:cannot_be_longer_than, maxLength: maxLength)
         end
 
-        if options = validations[:options]
-          self.errors[key] = I18n.t(:must_be_one_of, options: options) if !options.include?(value)
+        if options = validations[:options] and !options.include?(value)
+          self.errors[key] = I18n.t(:must_be_one_of, options: options)
         end
 
-        if format = validations[:format]
-          self.errors[key] = I18n.t(:doesnt_match_the_format) if !(format =~ value)
+        if format = validations[:format] and !(format =~ value)
+          self.errors[key] = I18n.t(:doesnt_match_the_format)
         end
       end
     end

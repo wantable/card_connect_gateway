@@ -40,7 +40,7 @@ module CardConnectGateway
         self.errors = {}
  
         if respstat != APPROVED
-          if resptext and !resptext.empty? and respproc and !respproc.empty?
+          if resptext.present? and respproc.present?
             self.errors[respproc.to_sym] = resptext 
           else
             self.errors["Card Connect Gateway"] = I18n.t(:unknown_error)

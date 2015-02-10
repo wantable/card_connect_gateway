@@ -18,7 +18,9 @@ I18n.backend.load_translations
 module CardConnectGateway
   module Rails
     if defined? ::Rails::Engine
-      require "card_connect_gateway/engine"
+      require 'card_connect_gateway/engine'
+    else
+      require 'card_connect_gateway/blank'
     end
   end
 
@@ -42,10 +44,6 @@ module CardConnectGateway
     # same as create. just requires the profile id be filled in on the api side
     options[:profileupdate] = Base::Y
     Profile.new(options) 
-  end
-
-  def self.capture(options={})
-    Capture.new(options)
   end
 
   def self.void(options={})

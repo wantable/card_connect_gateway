@@ -48,6 +48,18 @@ describe "Authorization" do
     expect(request.class.name).to eq(CardConnectGateway::Authorization::Request.name) 
   end
 
+  it 'api fail with bad password' do
+    CardConnectGateway.configuration.password = "wrongpassword"
+    expect{ 
+      CardConnectGateway.authorization({
+        account: VISA_APPROVAL_ACCOUNT,
+        expiry: '0921',
+        cvv2: CVV_MATCH,
+        postal: VISA_AVS_MATCH_ZIP
+      })}
+      .to raise_error(RestClient::Unauthorized)
+  end
+
   it 'auth successfully' do
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -62,7 +74,6 @@ describe "Authorization" do
   end
 
   it 'test user fields' do
-    puts "TESTING"
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
       expiry: '0921',
@@ -78,8 +89,6 @@ describe "Authorization" do
     expect(response.errors).to eq({}) 
     expect(response.valid?).to eq(true)
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
-    
-    puts response.inspect
   end
 
   it 'international cards' do
@@ -404,7 +413,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -413,7 +423,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_PARTIAL_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: MASTERCARD_APPROVAL_ACCOUNT,
@@ -432,7 +443,6 @@ describe "Authorization" do
       postal: MASTERCARD_AVS_MISMATCH
     })
     expect(response.valid?).to eq(false)
-
   end
 
   it 'avs responses with only address match required' do
@@ -450,7 +460,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -468,7 +479,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: MASTERCARD_ZIP_MISMATCH
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: MASTERCARD_APPROVAL_ACCOUNT,
@@ -497,7 +509,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -542,7 +555,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -551,7 +565,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: VISA_AVS_PARTIAL_MATCH_ZIP
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: MASTERCARD_APPROVAL_ACCOUNT,
@@ -560,7 +575,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: MASTERCARD_ZIP_MISMATCH
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
     response = CardConnectGateway.authorization({
       account: MASTERCARD_APPROVAL_ACCOUNT,
@@ -569,7 +585,8 @@ describe "Authorization" do
       cvv2: CVV_MATCH,
       postal: MASTERCARD_AVS_MISMATCH
     })
-    expect(response.valid?).to eq(true)
+    response.valid?
+    expect(response.errors).to eq({})
 
   end
 end

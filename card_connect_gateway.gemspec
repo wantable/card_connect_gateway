@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for
   s.homepage    = 'http://github.com/wantable/card_connect_gateway'
   s.license       = 'MIT'
-  s.add_dependency('rest_client')
+  s.add_dependency('rest-client')
   s.add_dependency('i18n')
   s.add_development_dependency('rspec')
   s.add_development_dependency('rake')

@@ -125,15 +125,11 @@ module CardConnectGateway
 
       def card_type
         return @card_type if @card_type
-        return nil if account.nil? or account.empty?
+        return nil if account.blank?
         CARD_TYPES.keys.each do |t|
           return t if card_is(t)
         end
         nil
-      end
-
-      def card_type=(card_type)
-        @card_type = card_type
       end
 
       def validate
@@ -148,12 +144,11 @@ module CardConnectGateway
       end
 
       def has_profile_id?
-        !profile.nil? and profile.length > 1
+        profile.present? and profile.length > 1 # can be Y/N or the profileId, then its longer
       end
 
       def send
-        # CardConnectGateway.configuration
-        if !has_profile_id? and card_type == VISA and amount == 0 and cvv2 and !cvv2.empty? and postal and !postal.empty?
+        if !has_profile_id? and card_type == VISA and amount == 0 and cvv2.present? and postal.present?
           # card connect doesn't let you do cvv and avs on a $0 visa auth so we have to do an extra request just for that
           extra_request = self.clone
           extra_request.cvv2 = nil

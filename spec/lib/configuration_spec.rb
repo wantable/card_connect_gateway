@@ -7,6 +7,8 @@ describe "Configuration" do
     expect(CardConnectGateway.configuration.user_id).to eq(ENV['CARD_CONNECT_USER_ID']) 
     expect(CardConnectGateway.configuration.password).to eq(ENV['CARD_CONNECT_PASSWORD']) 
     expect(CardConnectGateway.configuration.test_mode).to eq(true) 
+    expect(CardConnectGateway.configuration.url).to eq(CardConnectGateway::Configuration::TEST_URL)
+    expect(CardConnectGateway.configuration.ajax_url).to eq(CardConnectGateway::Configuration::TEST_AJAX_URL) 
   end
 
   it 'environment is set' do
