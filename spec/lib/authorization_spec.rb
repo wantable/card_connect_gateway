@@ -61,6 +61,27 @@ describe "Authorization" do
     expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
   end
 
+  it 'test user fields' do
+    puts "TESTING"
+    response = CardConnectGateway.authorization({
+      account: VISA_APPROVAL_ACCOUNT,
+      expiry: '0921',
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP,
+      userfields: {
+        order_id: 'test-order-id',
+        customer_email: 'customer@email.com',
+        int_value: 90
+      }
+    })
+    response.validate
+    expect(response.errors).to eq({}) 
+    expect(response.valid?).to eq(true)
+    expect(response.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
+    
+    puts response.inspect
+  end
+
   it 'international cards' do
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -167,9 +188,7 @@ describe "Authorization" do
       postal: 'junk',
       cvv2: CVV_MATCH
     })
-    puts "auth with bad zip"
     fail.valid?
-    puts fail.errors
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
     expect(fail.errors).to eq({PPS: "Invalid zip"}) 

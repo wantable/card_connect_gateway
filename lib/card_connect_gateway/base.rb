@@ -38,7 +38,18 @@ module CardConnectGateway
 
     def get_value(key)
       value = instance_variable_get("@#{key}")
-      value = value ? value.to_s : value # everything is a string...
+      if value 
+        if value.class == Hash 
+          value.inject({}) do |hash, item|
+            hash[item[0]] = item[1].to_s
+            hash
+          end
+        else
+          value.to_s # everything is a string...
+        end
+      else
+        value
+      end
     end
   end
 end

@@ -6,7 +6,7 @@ module CardConnectGateway
       ECOMMERCE = 'E'
 
       attr_accessor :merchid, :accttype, :account, :expiry, :amount, :currency, :name, :address, :city, :region, :country, :phone, 
-                    :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture, :profile
+                    :postal, :email, :ecomind, :cvv2, :orderid, :track, :bankaba, :tokenize, :termid, :capture, :profile, :userfields
 
       CARD_TYPES = {
         VISA              => /^4\d{12}(\d{3})?$/,
@@ -114,10 +114,10 @@ module CardConnectGateway
           # http://www.cardconnect.com/developer/docs/#profiles
           profile: { 
             # could be 1 or 20 long
-          }
-          # USER FIELDS NOT IMPLEMENTED
+          },
           # http://www.cardconnect.com/developer/docs/#user-fields
-
+          userfields: {
+          }
           # 3D SECURE NOT IMPLEMENTED 
           # http://www.cardconnect.com/developer/docs/#3d-secure
         }
