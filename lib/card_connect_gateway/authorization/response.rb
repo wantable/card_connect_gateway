@@ -189,10 +189,14 @@ module CardConnectGateway
             self.address_match = false
           end
         when U 
-          if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER
+          if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER or card_type == VISA
             # Address Information Is Unavailable
             #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
             #   so we have to allow it through
+
+            # added Visa to here too even though the card connect documentation says thats not a valid code. Their tech support said:
+            #   "It is not uncommon for an international issuer to respond with an avsresp of ‘U’.  
+            #   Not all issuing banks, especially international banks, honor AVS checks."
             self.address_match = true 
             self.zip_match = true
           end
