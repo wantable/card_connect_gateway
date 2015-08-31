@@ -22,16 +22,57 @@
 
     this.getCardType = getCardType
 
+    formatResponse = (data, number) ->
+      {token: data.data, last_four: data.data.substr(data.data.length-4, 4), card_type: getCardType(number)}
+
     this.tokenize = (number) ->
+      url = "https://#{$window.CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{number}"
       deferred = $q.defer()
-      $http.get("https://#{$window.CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{number}").success((responseText, status, headers, config) ->
+
+      # http://stackoverflow.com/a/30655734/903043
+      #Use the XDomainRequest for IE8-9, or angular get request will recieve "access denied" error.
+      if window.XDomainRequest?
+        xdr = new (window.XDomainRequest)
+        #See explination below why global.pendingXDR is set.  Cleaning up that memory here.
+
+        removeXDR = (xdr) ->
+          #You will need a indexOf function defined for IE8.  See http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8.
+          index = global.pendingXDR.indexOf(xdr)
+          if index >= 0
+            global.pendingXDR.splice index, 1
+
+        if xdr
+          # bind xdr.onload before sending the request (or the event does nothing).
+
+          xdr.onload = ->
+            removeXDR xdr
+            data = xdr.responseText
+            deferred.resolve(formatResponse(xdr.responseText, number))
+
+          xdr.onerror = (error) ->
+            removeXDR xdr
+            deferred.reject(data)
+
+          xdr.open 'get', url
+          xdr.send()
+          #In Internet Explorer 8/9, the XDomainRequest object is incorrectly subject to garbage collection after
+          #send() has been called but not yet completed. The symptoms of this bug are the Developer Tools'
+          #network trace showing "Aborted" for the requests and none of the error, timeout, or success event
+          #handlers being called.
+          #To correctly work around this issue, ensure the XDomainRequest is stored in a global variable until
+          #the request completes.
+          global.pendingXDR = []
+          global.pendingXDR.push xdr
+
+    else
+      $http.get(url).success((responseText, status, headers, config) ->
         # this returns a JSONP response processToken( { "action" : "CE", "data" : "actual token" } ) 
         # but they don't set the content-type header correctly so we can't use $http.jsonp
         # instead we can do a straight GET and process it from text. 14 is the length of "processToken( "
         # a bit brittle but they didn't leave us much choice
         
         data = JSON.parse(responseText.substring(14, responseText.length - 2));
-        deferred.resolve({token: data.data, last_four: data.data.substr(data.data.length-4, 4), card_type: getCardType(number)})
+        deferred.resolve(formatResponse(xdr.responseText, number))
       ).error((data, status, headers, config) ->
         deferred.reject(data)
       )
