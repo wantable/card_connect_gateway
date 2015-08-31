@@ -37,9 +37,9 @@
 
         removeXDR = (xdr) ->
           #You will need a indexOf function defined for IE8.  See http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8.
-          index = global.pendingXDR.indexOf(xdr)
+          index = $window.pendingXDR.indexOf(xdr)
           if index >= 0
-            global.pendingXDR.splice index, 1
+            $window.pendingXDR.splice index, 1
 
         if xdr
           # bind xdr.onload before sending the request (or the event does nothing).
@@ -61,8 +61,8 @@
           #handlers being called.
           #To correctly work around this issue, ensure the XDomainRequest is stored in a global variable until
           #the request completes.
-          global.pendingXDR = []
-          global.pendingXDR.push xdr
+          $window.pendingXDR = []
+          $window.pendingXDR.push xdr
       else
         $http.get(url).success((responseText, status, headers, config) ->
           # this returns a JSONP response processToken( { "action" : "CE", "data" : "actual token" } ) 

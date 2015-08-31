@@ -39,9 +39,9 @@
           xdr = new window.XDomainRequest;
           removeXDR = function(xdr) {
             var index;
-            index = global.pendingXDR.indexOf(xdr);
+            index = $window.pendingXDR.indexOf(xdr);
             if (index >= 0) {
-              return global.pendingXDR.splice(index, 1);
+              return $window.pendingXDR.splice(index, 1);
             }
           };
           if (xdr) {
@@ -57,8 +57,8 @@
             };
             xdr.open('get', url);
             xdr.send();
-            global.pendingXDR = [];
-            global.pendingXDR.push(xdr);
+            $window.pendingXDR = [];
+            $window.pendingXDR.push(xdr);
           }
         } else {
           $http.get(url).success(function(responseText, status, headers, config) {
