@@ -22,8 +22,12 @@
 
     this.getCardType = getCardType
 
-    formatResponse = (data, number) ->
-      {token: data.data, last_four: data.data.substr(data.data.length-4, 4), card_type: getCardType(number)}
+    formatResponse = (responseText, number, deferred) ->
+      data = JSON.parse(responseText.substring(14, responseText.length - 2));
+      if data.action == "ER"
+        deferred.reject(data.data.replace(/.*::/, ''))
+      else
+        deferred.resolve({token: data.data, last_four: data.data.substr(data.length-4, 4), card_type: getCardType(number)})
 
     this.tokenize = (number) ->
       url = "https://#{$window.CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{number}"
@@ -46,8 +50,7 @@
 
           xdr.onload = ->
             removeXDR xdr
-            data = xdr.responseText
-            deferred.resolve(formatResponse(xdr.responseText, number))
+            formatResponse(xdr.responseText, number, deferred)
 
           xdr.onerror = (error) ->
             removeXDR xdr
@@ -70,8 +73,7 @@
           # instead we can do a straight GET and process it from text. 14 is the length of "processToken( "
           # a bit brittle but they didn't leave us much choice
           
-          data = JSON.parse(responseText.substring(14, responseText.length - 2));
-          deferred.resolve(formatResponse(xdr.responseText, number))
+          formatResponse(responseText, number, deferred)
         ).error((data, status, headers, config) ->
           deferred.reject(data)
         )

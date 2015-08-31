@@ -24,12 +24,18 @@
         return found;
       };
       this.getCardType = getCardType;
-      formatResponse = function(data, number) {
-        return {
-          token: data.data,
-          last_four: data.data.substr(data.data.length - 4, 4),
-          card_type: getCardType(number)
-        };
+      formatResponse = function(responseText, number, deferred) {
+        var data;
+        data = JSON.parse(responseText.substring(14, responseText.length - 2));
+        if (data.action === "ER") {
+          return deferred.reject(data.data.replace(/.*::/, ''));
+        } else {
+          return deferred.resolve({
+            token: data.data,
+            last_four: data.data.substr(data.length - 4, 4),
+            card_type: getCardType(number)
+          });
+        }
       };
       this.tokenize = function(number) {
         var deferred, removeXDR, url, xdr;
@@ -46,10 +52,8 @@
           };
           if (xdr) {
             xdr.onload = function() {
-              var data;
               removeXDR(xdr);
-              data = xdr.responseText;
-              return deferred.resolve(formatResponse(xdr.responseText, number));
+              return formatResponse(xdr.responseText, number, deferred);
             };
             xdr.onerror = function(error) {
               removeXDR(xdr);
@@ -62,9 +66,7 @@
           }
         } else {
           $http.get(url).success(function(responseText, status, headers, config) {
-            var data;
-            data = JSON.parse(responseText.substring(14, responseText.length - 2));
-            return deferred.resolve(formatResponse(xdr.responseText, number));
+            return formatResponse(responseText, number, deferred);
           }).error(function(data, status, headers, config) {
             return deferred.reject(data);
           });
