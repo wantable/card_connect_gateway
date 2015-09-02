@@ -32,7 +32,7 @@
         } else {
           return deferred.resolve({
             token: data.data,
-            last_four: data.data.substr(data.length - 4, data.length),
+            last_four: data.data.substr(data.data.length - 4, data.data.length),
             card_type: getCardType(number)
           });
         }
