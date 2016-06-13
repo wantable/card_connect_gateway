@@ -150,7 +150,7 @@ describe "Authorization" do
     })
     expect(fail.class.name).to eq(CardConnectGateway::Authorization::Response.name) 
     expect(fail.valid?).to eq(false)
-    expect(fail.errors).to eq({FNOR: "Declined"}) 
+    expect(fail.errors).to eq({FNOR: "Insufficient funds"}) 
   end
 
   it 'auth fail with cvv mismatch' do
