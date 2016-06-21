@@ -1,6 +1,5 @@
 # Card Connect Gateway #
-A Ruby API client that interfaces with card connect's REST api for credit card payment processing. [![Code Climate](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/gpa.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed) [![Build Status](https://magnum.travis-ci.com/wantable/card_connect_gateway.svg?token=5QxyH7sFBDYR4iimsFye&branch=AjaxTokenizer)](https://magnum.travis-ci.com/wantable/card_connect_gateway)
-
+A Ruby API client that interfaces with card connect's REST api for credit card payment processing. [![Code Climate](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/gpa.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed) [![Build Status](https://magnum.travis-ci.com/wantable/card_connect_gateway.svg?token=5QxyH7sFBDYR4iimsFye)](https://magnum.travis-ci.com/wantable/card_connect_gateway)
 [Card Connect Documentation](http://www.cardconnect.com/developer/docs/)
 
 ### Setup ###
@@ -185,4 +184,3 @@ Finished in 0.00142 seconds (files took 0.09582 seconds to load)
 ### Notes ###
 
 If you're doing international payments you have to set the country on authorize. Otherwise it defaults to US.
-
