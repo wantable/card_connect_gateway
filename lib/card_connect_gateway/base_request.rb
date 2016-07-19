@@ -7,6 +7,8 @@ module CardConnectGateway
     GIFT= 'GIFT'
     PDEBIT = 'PDEBIT'
 
+    attr_accessor :merchid
+
     def validate
       self.errors ||= {}
       self.class.attributes.each do |key, validations|

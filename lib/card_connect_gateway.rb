@@ -4,6 +4,7 @@ require 'card_connect_gateway/helpers'
 require 'card_connect_gateway/base'
 require 'card_connect_gateway/base_request'
 require 'card_connect_gateway/base_response'
+require 'card_connect_gateway/base_authorized_request'
 require 'card_connect_gateway/authorization'
 require 'card_connect_gateway/capture'
 require 'card_connect_gateway/void'
@@ -14,7 +15,6 @@ require 'i18n'
 
 I18n.load_path = Dir['config/locales/*.yml']
 I18n.backend.load_translations
-
 
 module CardConnectGateway
   module Rails

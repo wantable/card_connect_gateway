@@ -33,8 +33,8 @@ module CardConnectGateway
       Y = 'Y'
       Z = 'Z'
 
-      attr_accessor :respstat, :retref, :account, :token, :amount, :merchid, :respcode, :resptext, :respproc, :avsresp, 
-                    :cvvresp, :authcode, :commcard, :profileid, :check_cvv, :card_type, :zip_match, :address_match, :customer_name_match, :check_avs
+      attr_accessor :retref, :account, :token, :amount, :avsresp, :cvvresp, :authcode, :commcard, :profileid, :check_cvv, 
+                    :card_type, :zip_match, :address_match, :customer_name_match, :check_avs
 
       def validate
         self.errors = {}

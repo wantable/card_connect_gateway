@@ -8,6 +8,9 @@ module CardConnectGateway
     CardConnectInternalResponse = 'PPS'
     FirstDataNorth = 'FNOR'
 
+    # some common attributes
+    attr_accessor :respcode, :respproc, :respstat, :resptext, :merchid
+
     def validate
       self.errors = {}
 
