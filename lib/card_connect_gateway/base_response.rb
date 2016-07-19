@@ -8,6 +8,11 @@ module CardConnectGateway
     CardConnectInternalResponse = 'PPS'
     FirstDataNorth = 'FNOR'
 
+    QUEUED_FOR_CAPTURE = "Queued for Capture"
+    ACCEPTED = "Accepted"
+
+    VALID_SETLSTAT = [QUEUED_FOR_CAPTURE, ACCEPTED]
+
     def validate
       self.errors = {}
 
@@ -18,7 +23,7 @@ module CardConnectGateway
           errors["Card Connect Gateway"] = I18n.t(:unknown_error)
         end
       end
-
+      
       @validated = true
 
       errors.empty?
