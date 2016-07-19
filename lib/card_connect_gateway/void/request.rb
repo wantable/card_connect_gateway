@@ -1,6 +1,6 @@
 module CardConnectGateway
   module Void
-    class Request < BaseAuthorizedRequest
+    class Request < AuthorizedRequest
       def self.resource_name
         'void'
       end

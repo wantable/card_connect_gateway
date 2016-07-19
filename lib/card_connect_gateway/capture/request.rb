@@ -1,6 +1,6 @@
 module CardConnectGateway
   module Capture
-    class Request < BaseAuthorizedRequest
+    class Request < AuthorizedRequest
       def self.resource_name
         'capture'
       end

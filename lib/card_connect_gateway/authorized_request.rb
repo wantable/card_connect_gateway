@@ -1,6 +1,6 @@
 # Refund, Capture, Void all have the exact same request so I've pulled those attributes out into this base class
 module CardConnectGateway
-  class BaseAuthorizedRequest < BaseRequest
+  class AuthorizedRequest < BaseRequest
     attr_accessor :retref, :amount
     def self.attributes 
       {

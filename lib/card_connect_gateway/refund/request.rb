@@ -1,6 +1,6 @@
 module CardConnectGateway
   module Refund
-    class Request < BaseAuthorizedRequest
+    class Request < AuthorizedRequest
       def self.resource_name
         'refund'
       end
