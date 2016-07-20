@@ -7,6 +7,8 @@ module CardConnectGateway
     GIFT= 'GIFT'
     PDEBIT = 'PDEBIT'
 
+    attr_accessor :merchid
+
     def validate
       self.errors ||= {}
       self.class.attributes.each do |key, validations|
@@ -35,10 +37,12 @@ module CardConnectGateway
         options[:amount] = (options[:amount] * 100).to_i
       end
 
+      # set default values
       self.class.attributes.each do |key, validations|
         set_value(key, validations[:default])
       end
 
+      # normalize booleans 
       mapped_options = {}
       options.each do |key, value|
         value = Y if value == true

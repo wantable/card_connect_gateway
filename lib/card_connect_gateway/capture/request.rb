@@ -1,8 +1,8 @@
 module CardConnectGateway
-  module Refund
+  module Capture
     class Request < AuthorizedRequest
       def self.resource_name
-        'refund'
+        'capture'
       end
     end
   end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    card_connect_gateway (0.1.29)
+    card_connect_gateway (0.1.30)
       i18n
       rest-client
 
@@ -19,7 +19,7 @@ GEM
     coffee-script-source (1.9.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.24)
+    domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     execjs (2.3.0)
     ffi (1.9.6)
@@ -54,10 +54,10 @@ GEM
       rb-inotify (>= 0.9)
     lumberjack (1.0.9)
     method_source (0.8.2)
-    mime-types (2.6.1)
+    mime-types (2.99.2)
     multi_json (1.10.1)
     nenv (0.2.0)
-    netrc (0.10.3)
+    netrc (0.11.0)
     notiffany (0.0.5)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -100,7 +100,7 @@ GEM
       hitimes
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.1)
+    unf_ext (0.0.7.2)
 
 PLATFORMS
   ruby
@@ -113,3 +113,6 @@ DEPENDENCIES
   jasmine
   rake
   rspec
+
+BUNDLED WITH
+   1.12.0

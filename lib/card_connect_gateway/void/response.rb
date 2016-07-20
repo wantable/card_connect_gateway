@@ -1,9 +1,7 @@
 module CardConnectGateway
   module Void
     class Response < BaseResponse
-
-      attr_accessor :merchid, :amount, :currency, :retref, :authcode, :respcode, :respproc, :respstat, :resptext
-
+      attr_accessor :amount, :currency, :retref, :authcode
     end
   end
 end
