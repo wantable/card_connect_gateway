@@ -48,28 +48,28 @@ setup ajax tokenizer (if using)
 #### Authorizations ####
 ```ruby
 
-response = CardConnectGateway.authorization({
+auth = CardConnectGateway.authorization({
   account: '4788250000121443',
   expiry: '0921',
   cvv2: '112',
   postal: '19406'
 })
-response.valid?
+auth.valid?
 #  => true 
 
 
-response = CardConnectGateway.authorization({
+auth = CardConnectGateway.authorization({
   account: '5454545454545454',
   expiry: '0921',
   cvv2: '112',
   amount: 20,
   postal: '19111'
 })
-response.valid?
-response.errors
+auth.valid?
+auth.errors
 #  => {:postal=>"doesn't match."} 
 
-response.card_type
+auth.card_type
 #  => "MasterCard" 
 
 ```
@@ -103,7 +103,7 @@ response.valid?
 
 ```ruby
 
-response = CardConnectGateway.authorization({
+auth = CardConnectGateway.authorization({
   account: '4788250000121443',
   expiry: '0921',
   cvv2: '112',
@@ -124,7 +124,7 @@ void.valid?
 #### Refund ####
 
 ``` ruby
-response = CardConnectGateway.authorization({
+auth = CardConnectGateway.authorization({
   account: '4788250000121443',
   expiry: '0921',
   cvv2: '112',
@@ -141,6 +141,25 @@ refund.valid?
 # can't actually process one of these because you have to wait 24 hours
 refund.errors 
 #  => {PPS: "Txn not settled"}
+```
+
+#### Capture #### 
+
+```ruby
+auth = CardConnectGateway.authorization({
+  account: '4788250000121443',
+  expiry: '0921',
+  cvv2: '112',
+  postal: '19406',
+  amount: 20
+})
+
+capture = CardConnectGateway.capture({
+  retref: auth.retref,
+  amount: 5
+})
+capture.valid?
+# => true 
 ```
 
 #### Ajax tokenizer in angular ####
