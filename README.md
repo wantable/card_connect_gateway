@@ -2,7 +2,7 @@
 A Ruby API client that interfaces with card connect's REST api for credit card payment processing. 
 [![Code Climate](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/gpa.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed) 
 [![Coverage](https://codeclimate.com/repos/54ab06bee30ba014650091e0/badges/fcd7731ecb1fe3dd7856/coverage.svg)](https://codeclimate.com/repos/54ab06bee30ba014650091e0/feed) 
-[![Build Status](https://magnum.travis-ci.com/wantable/card_connect_gateway.svg?token=5QxyH7sFBDYR4iimsFye)](https://magnum.travis-ci.com/wantable/card_connect_gateway)
+[![Build Status](https://travis-ci.org/wantable/card_connect_gateway.svg)](https://travis-ci.org/wantable/card_connect_gateway)
 
 
 [Card Connect Documentation](http://www.cardconnect.com/developer/docs/)
@@ -186,6 +186,7 @@ $ npm install grunt-contrib-watch --save-dev
 ```
 
 then tell grunt to watch coffeescript files and rebuild them as they are changed with ```$ grunt watch```
+
 to force a coffeescript build call ```$ grunt coffee```
 
 
