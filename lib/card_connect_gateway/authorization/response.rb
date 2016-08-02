@@ -9,6 +9,9 @@ module CardConnectGateway
       CVV_UNKNOWN_OR_NO_PARTICIPATE = 'U'
       CVV_NO_RESPONSE = 'X'
 
+      # zip/address/customer name matching can be nil/true/false or unknown
+      AVS_UNKNOWN = 'unknown'
+
       # Card Connect avs response codes http://www.cardconnect.com/developer/docs/#address-verification-system
       A = 'A'
       B = 'B'
@@ -131,16 +134,16 @@ module CardConnectGateway
             # Address information not verified for international transaction
             #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
             #   so we have to allow it through
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_UNKNOWN 
+            self.zip_match = AVS_UNKNOWN
           end
         when I 
           if card_type == VISA 
             # Address information not verified
             #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
             #   so we have to allow it through
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_UNKNOWN 
+            self.zip_match = AVS_UNKNOWN
           end
         when K 
           if card_type == AMEX 
@@ -197,8 +200,8 @@ module CardConnectGateway
             # added Visa to here too even though the card connect documentation says thats not a valid code. Their tech support said:
             #   "It is not uncommon for an international issuer to respond with an avsresp of ‘U’.  
             #   Not all issuing banks, especially international banks, honor AVS checks."
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_UNKNOWN 
+            self.zip_match = AVS_UNKNOWN
           end
         when W 
           if card_type == DISCOVER 
@@ -206,7 +209,7 @@ module CardConnectGateway
             #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
             #   so we have to allow it through
             self.address_match = true 
-            self.zip_match = true
+            self.zip_match = AVS_UNKNOWN
           elsif card_type == AMEX
             # No, Cardmember Name, Billing Address and Postal Code are all incorrect
             self.address_match = false
