@@ -2,15 +2,18 @@ module CardConnectGateway
   module Authorization
     class Response < BaseResponse
 
+      # internal zip/address/customer name matching constants
+      AVS_SUCCESS = 'success'
+      AVS_FAIL = 'fail'
+      AVS_UNKNOWN = 'unknown'
+
+      # CVV codes from card connect
       CVV_MATCH = 'M'
       CVV_NO_MATCH = 'N'
       CVV_NOT_PROCESSED = 'P'
       CVV_MISSING = 'S'
       CVV_UNKNOWN_OR_NO_PARTICIPATE = 'U'
       CVV_NO_RESPONSE = 'X'
-
-      # zip/address/customer name matching can be nil/true/false or unknown
-      AVS_UNKNOWN = 'unknown'
 
       # Card Connect avs response codes http://www.cardconnect.com/developer/docs/#address-verification-system
       A = 'A'
@@ -63,15 +66,15 @@ module CardConnectGateway
           validate_avs_response 
           if CardConnectGateway.configuration.require_avs_zip_code_match
             self.errors[:postal] = I18n.t(:unknown_error) if zip_match.nil?
-            self.errors[:postal] = I18n.t(:doesnt_match) if zip_match == false
+            self.errors[:postal] = I18n.t(:doesnt_match) if zip_match == AVS_FAIL
           end
           if CardConnectGateway.configuration.require_avs_address_match
             self.errors[:address] = I18n.t(:unknown_error) if address_match.nil?
-            self.errors[:address] = I18n.t(:doesnt_match) if address_match == false
+            self.errors[:address] = I18n.t(:doesnt_match) if address_match == AVS_FAIL
           end
           if CardConnectGateway.configuration.require_avs_customer_name_match
             self.errors[:name] = I18n.t(:unknown_error) if customer_name_match.nil?
-            self.errors[:name] = I18n.t(:doesnt_match) if customer_name_match == false
+            self.errors[:name] = I18n.t(:doesnt_match) if customer_name_match == AVS_FAIL
           end
         end
 
@@ -90,44 +93,44 @@ module CardConnectGateway
         case avsresp 
         when A
           if card_type == DISCOVER
-            self.address_match = true
-            self.zip_match = true 
+            self.address_match = AVS_SUCCESS
+            self.zip_match = AVS_SUCCESS 
           elsif card_type == MASTERCARD or card_type == AMEX
-            self.address_match = true
-            self.zip_match = false
+            self.address_match = AVS_SUCCESS
+            self.zip_match = AVS_FAIL
           end
         when B 
           if card_type == VISA 
-            self.address_match = true
-            self.zip_match = false # Postal code not verified due to incompatible formats.
+            self.address_match = AVS_SUCCESS
+            self.zip_match = AVS_FAIL # Postal code not verified due to incompatible formats.
           end
         when C 
           if card_type == VISA 
             # Street address and postal code not verified due to incompatible formats.
-            self.address_match = false 
-            self.zip_match = false 
+            self.address_match = AVS_FAIL 
+            self.zip_match = AVS_FAIL 
           end
         when D 
           if card_type == AMEX 
-            self.zip_match = true 
-            self.customer_name_match = false
+            self.zip_match = AVS_SUCCESS 
+            self.customer_name_match = AVS_FAIL
           elsif card_type == VISA
-            self.zip_match = true
-            self.address_match = true
+            self.zip_match = AVS_SUCCESS
+            self.address_match = AVS_SUCCESS
           end
         when E 
           if card_type == AMEX 
-            self.address_match = true
-            self.zip_match = true 
-            self.customer_name_match = false
+            self.address_match = AVS_SUCCESS
+            self.zip_match = AVS_SUCCESS 
+            self.customer_name_match = AVS_FAIL
           end
         when F 
           if card_type == AMEX 
-            self.address_match = true
-            self.customer_name_match = false
+            self.address_match = AVS_SUCCESS
+            self.customer_name_match = AVS_FAIL
           elsif card_type == VISA 
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_SUCCESS 
+            self.zip_match = AVS_SUCCESS
           end
         when G 
           if card_type == VISA or card_type == DISCOVER
@@ -147,34 +150,34 @@ module CardConnectGateway
           end
         when K 
           if card_type == AMEX 
-            self.customer_name_match = true 
+            self.customer_name_match = AVS_SUCCESS 
           end
         when L 
           if card_type == AMEX 
-            self.customer_name_match = true
-            self.zip_match = true
+            self.customer_name_match = AVS_SUCCESS
+            self.zip_match = AVS_SUCCESS
           end
         when M
           if card_type == AMEX  or card_type == VISA 
-            self.address_match = true
-            self.customer_name_match = true
-            self.zip_match = true
+            self.address_match = AVS_SUCCESS
+            self.customer_name_match = AVS_SUCCESS
+            self.zip_match = AVS_SUCCESS
           end
         when N 
           if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER or card_type == VISA
-            self.address_match = false
-            self.customer_name_match = false
-            self.zip_match = false
+            self.address_match = AVS_FAIL
+            self.customer_name_match = AVS_FAIL
+            self.zip_match = AVS_FAIL
           end
         when O 
           if card_type == AMEX 
-            self.address_match = true
-            self.customer_name_match = true
+            self.address_match = AVS_SUCCESS
+            self.customer_name_match = AVS_SUCCESS
           end
         when P 
           if card_type == VISA 
             # street address not verified due to incompatible formats
-            self.zip_match = true
+            self.zip_match = AVS_SUCCESS
           end
         when R 
           if card_type == MASTERCARD or card_type == AMEX
@@ -183,13 +186,13 @@ module CardConnectGateway
         when S 
           if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER
             # Issuer Does Not Support Address Verification
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_SUCCESS 
+            self.zip_match = AVS_SUCCESS
           end
         when T 
           if card_type == DISCOVER 
-            self.zip_match = true 
-            self.address_match = false
+            self.zip_match = AVS_SUCCESS 
+            self.address_match = AVS_FAIL
           end
         when U 
           if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER or card_type == VISA
@@ -208,39 +211,39 @@ module CardConnectGateway
             # No data from Issuer/Authorization system
             #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
             #   so we have to allow it through
-            self.address_match = true 
+            self.address_match = AVS_SUCCESS 
             self.zip_match = AVS_UNKNOWN
           elsif card_type == AMEX
             # No, Cardmember Name, Billing Address and Postal Code are all incorrect
-            self.address_match = false
-            self.customer_name_match = false
-            self.zip_match = false
+            self.address_match = AVS_FAIL
+            self.customer_name_match = AVS_FAIL
+            self.zip_match = AVS_FAIL
           elsif card_type == MASTERCARD
-            self.zip_match = true
-            self.address_match = false
+            self.zip_match = AVS_SUCCESS
+            self.address_match = AVS_FAIL
           end
         when X 
           if card_type == DISCOVER 
-            self.zip_match = true 
+            self.zip_match = AVS_SUCCESS 
           elsif card_type == MASTERCARD
-            self.zip_match = true
-            self.address_match = true
+            self.zip_match = AVS_SUCCESS
+            self.address_match = AVS_SUCCESS
           end
         when Y 
           if card_type == DISCOVER
-            self.address_match = true
-            self.zip_match = false
+            self.address_match = AVS_SUCCESS
+            self.zip_match = AVS_FAIL
           elsif card_type == VISA or card_type == MASTERCARD or card_type == AMEX
-            self.address_match = true 
-            self.zip_match = true
+            self.address_match = AVS_SUCCESS 
+            self.zip_match = AVS_SUCCESS
           end
         when Z 
           if card_type == DISCOVER
-            self.address_match = false
-            self.zip_match = true
+            self.address_match = AVS_FAIL
+            self.zip_match = AVS_SUCCESS
           elsif card_type == VISA or card_type == MASTERCARD or card_type == AMEX
-            self.address_match = false 
-            self.zip_match = true
+            self.address_match = AVS_FAIL 
+            self.zip_match = AVS_SUCCESS
           end
         else
           # UNKNOWN RESPONSE
