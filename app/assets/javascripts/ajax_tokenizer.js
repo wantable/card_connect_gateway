@@ -33,12 +33,7 @@
             status: status
           });
         } else {
-          return deferred.resolve({
-            token: data.data,
-            last_four: data.data.substr(data.data.length - 4, data.data.length),
-            card_type: getCardType(number),
-            status: status
-          });
+          return deferred.resolve({token: data.data,last_four: data.data.substr(data.data.length - 4, data.data.length),card_type: getCardType(number),status: status});
         }
       };
       this.tokenize = function(number) {
@@ -72,7 +67,7 @@
           $http.get(url).success(function(responseText, status, headers, config) {
             return formatResponse(responseText, number, deferred, status);
           }).error(function(data, status, headers, config) {
-            deferred.reject({error: data, status: status});
+            return deferred.reject({error: data, status: status});
           });
         }
         return deferred.promise;
