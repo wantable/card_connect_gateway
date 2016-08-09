@@ -26,12 +26,38 @@ describe "cardConnect", ->
 
     it "gets token", inject( -> 
 
-      httpBackend.whenGET("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{VISA_APPROVAL_ACCOUNT}").respond('processToken( { "action" : "CE", "data" : "47-hzj9xh9N-1443" } )')
+      httpBackend.whenGET("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{VISA_APPROVAL_ACCOUNT}").respond(200, 'processToken( { "action" : "CE", "data" : "47-hzj9xh9N-1443" } )')
 
       ajaxTokenizer.tokenize(VISA_APPROVAL_ACCOUNT).then((tokenizedCard) ->
         expect(tokenizedCard.token.substr(0,2)).toEqual(VISA_APPROVAL_ACCOUNT.substr(0,2))
         expect(tokenizedCard.token.substr(tokenizedCard.token.length-4, tokenizedCard.token.length)).toEqual(VISA_APPROVAL_ACCOUNT.substr(VISA_APPROVAL_ACCOUNT.length-4, VISA_APPROVAL_ACCOUNT.length))
         expect(tokenizedCard.token.substr(tokenizedCard.token.length-4, tokenizedCard.token.length)).toEqual(tokenizedCard.last_four)
+        expect(tokenizedCard.status).toEqual(200)
+      )
+      httpBackend.flush()
+
+    )
+
+    it "data too short", inject( -> 
+      message = "Data too short"
+      account = "4"
+      httpBackend.whenGET("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{account}").respond(200, 'processToken( { "action" : "ER", "data" : "' + message + '" } )')
+
+      ajaxTokenizer.tokenize(account).catch((data) ->
+        expect(data.error).toEqual(message)
+        expect(data.status).toEqual(200)
+      )
+      httpBackend.flush()
+
+    )
+
+    it "card connect error", inject( -> 
+      message = 'Could not resolve host: fts.prinpay.com'
+      httpBackend.whenGET("https://#{CARDCONNECT_AJAX_URL}?type=json&action=CE&data=#{VISA_APPROVAL_ACCOUNT}").respond(400, message)
+
+      ajaxTokenizer.tokenize(VISA_APPROVAL_ACCOUNT).catch((data) ->
+        expect(data.error).toEqual(message)
+        expect(data.status).toEqual(400)
       )
       httpBackend.flush()
 
