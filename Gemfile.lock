@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    card_connect_gateway (0.1.33)
+    card_connect_gateway (0.1.34)
       i18n
       rest-client
 
