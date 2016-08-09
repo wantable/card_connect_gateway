@@ -22,11 +22,33 @@
         return httpBackend.verifyNoOutstandingRequest();
       });
       it("gets token", inject(function() {
-        httpBackend.whenGET("https://" + CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + VISA_APPROVAL_ACCOUNT).respond('processToken( { "action" : "CE", "data" : "47-hzj9xh9N-1443" } )');
+        httpBackend.whenGET("https://" + CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + VISA_APPROVAL_ACCOUNT).respond(200, 'processToken( { "action" : "CE", "data" : "47-hzj9xh9N-1443" } )');
         ajaxTokenizer.tokenize(VISA_APPROVAL_ACCOUNT).then(function(tokenizedCard) {
           expect(tokenizedCard.token.substr(0, 2)).toEqual(VISA_APPROVAL_ACCOUNT.substr(0, 2));
           expect(tokenizedCard.token.substr(tokenizedCard.token.length - 4, tokenizedCard.token.length)).toEqual(VISA_APPROVAL_ACCOUNT.substr(VISA_APPROVAL_ACCOUNT.length - 4, VISA_APPROVAL_ACCOUNT.length));
-          return expect(tokenizedCard.token.substr(tokenizedCard.token.length - 4, tokenizedCard.token.length)).toEqual(tokenizedCard.last_four);
+          expect(tokenizedCard.token.substr(tokenizedCard.token.length - 4, tokenizedCard.token.length)).toEqual(tokenizedCard.last_four);
+          return expect(tokenizedCard.status).toEqual(200);
+        });
+        return httpBackend.flush();
+      }));
+      it("data too short", inject(function() {
+        var account, message;
+        message = "Data too short";
+        account = "4";
+        httpBackend.whenGET("https://" + CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + account).respond(200, 'processToken( { "action" : "ER", "data" : "' + message + '" } )');
+        ajaxTokenizer.tokenize(account)["catch"](function(data) {
+          expect(data.error).toEqual(message);
+          return expect(data.status).toEqual(200);
+        });
+        return httpBackend.flush();
+      }));
+      it("card connect error", inject(function() {
+        var message;
+        message = 'Could not resolve host: fts.prinpay.com';
+        httpBackend.whenGET("https://" + CARDCONNECT_AJAX_URL + "?type=json&action=CE&data=" + VISA_APPROVAL_ACCOUNT).respond(400, message);
+        ajaxTokenizer.tokenize(VISA_APPROVAL_ACCOUNT)["catch"](function(data) {
+          expect(data.error).toEqual(message);
+          return expect(data.status).toEqual(400);
         });
         return httpBackend.flush();
       }));
