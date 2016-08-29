@@ -15,7 +15,7 @@ module CardConnectGateway
       CVV_UNKNOWN_OR_NO_PARTICIPATE = 'U'
       CVV_NO_RESPONSE = 'X'
 
-      # Card Connect avs response codes http://www.cardconnect.com/developer/docs/#address-verification-system
+      # Card Connect avs response codes https://drive.google.com/file/d/0B3jCb2M9MdrKRVFXT043LUtuaDg/view
       A = 'A'
       B = 'B'
       C = 'C'
@@ -38,6 +38,177 @@ module CardConnectGateway
       X = 'X'
       Y = 'Y'
       Z = 'Z'
+
+      VISA_ADDRESS_MATCH_CODES = [
+        A, # Address matches, ZIP does not.
+        B, # Street addresses match. 
+        D, # Street addresses and postal codes match. 
+        F, # Street addresses and postal codes match. UK Only
+        M, # Street address and postal code match. 
+        X, # Not applicable. If present, replaced with ”Y” by V.I.P. Available for U.S. issuers only.
+        Y  # Street address and postal code match.
+      ]
+      VISA_ZIPCODE_MATCH_CODES = [
+        D, # Street addresses and postal codes match. 
+        F, # Street addresses and postal codes match. UK Only
+        M, # Street address and postal code match.
+        P, # Postal code match.
+        W, # Not applicable. If present, replaced with “Z” by V.I.P. Available to U.S. issuers only
+        X, # Not applicable. If present, replaced with ”Y” by V.I.P. Available for U.S. issuers only.
+        Y, # Street address and postal code match.
+        Z  # Postal/ZIP matches; street address does not match or Street address not included in request.
+      ]
+
+      VISA_ADDRESS_MISMATCH_CODES = [
+        C, # Street address and postal code not verified due to incompatible formats.
+        N, # No match. Acquirer sent postal/ZIP code only, or, street address only, or, both postal code and street address. Also used when acquirer requests AVS, but sends no AVS data in Field 123.
+        Z  # Postal/ZIP matches; street address does not match or Street address not included in request.
+      ]
+
+      VISA_ZIPCODE_MISMATCH_CODES = [
+        A, # Address matches, ZIP does not.
+        B, # Postal code not verified due to incompatible formats.
+        C, # Street address and postal code not verified due to incompatible formats.
+        N  # No match.
+      ]
+
+      VISA_ADDRESS_UNKNOWN_CODES = [
+        G, # Address information not verified for international transaction
+        I, # Address information not verified,
+        P, # street address not verified due to incompatible formats.
+        S, # Not applicable. If present, replaced with “U” for domestic, and “G” for international by V.I.P. Available for U.S. issuers only
+        U  # Address not verified for domestic transaction.
+      ]
+
+      VISA_ZIPCODE_UNKNOWN_CODES = [
+        G, # Address information not verified for international transaction
+        I, # Address information not verified
+        S, # Not applicable
+        U  # Address not verified for domestic transaction.
+      ]
+
+      MASTERCARD_ADDRESS_MATCH_CODES = [
+        X, # Exact: Address and 9-digit ZIP Match
+        Y, # Yes: Address and 5-digit ZIP Match
+        A  # Address: Address Matches ZIP Does Not Match
+      ]
+
+      MASTERCARD_ZIPCODE_MATCH_CODES = [
+        X, # Exact: Address and 9-digit ZIP Match
+        Y, # Yes: Address and 5-digit ZIP Match
+        W, # Whole Zip: 9-digit ZIP Matches, Address Does Not Match
+        Z  # Zip: 5-digit ZIP Matches, Address Does Not Match
+      ]
+
+      MASTERCARD_ADDRESS_MISMATCH_CODES = [
+        W, # Whole Zip: 9-digit ZIP Matches, Address Does Not Match
+        Z, # Zip: 5-digit ZIP Matches, Address Does Not Match
+        N  # No: Address and ZIP Do Not Match
+      ]
+
+      MASTERCARD_ZIPCODE_MISMATCH_CODES = [
+        A, # Address: Address Matches ZIP Does Not Match
+        N  # No: Address and ZIP Do Not Match
+      ]
+      
+      MASTERCARD_ADDRESS_UNKNOWN_CODES = [
+        U, # Address Info is Unavailable
+        E, # Error: Transaction ineligible for address verification or edit error found in the message that prevents AVS from being performed
+        S  # Service Not Supported: Issuer does not support address verification
+      ]
+
+      MASTERCARD_ZIPCODE_UNKNOWN_CODES = [
+        U, # Address Info is Unavailable
+        E, # Error: Transaction ineligible...
+        S  # Service Not Supported: Issuer does not support address verification
+      ]
+
+      AMEX_ADDRESS_MATCH_CODES = [
+        Y, # Address and ZIP Match
+        A, # Address Matches ZIP Does Not Match
+        M, # Cardmember Name, Billing Address and Postal Code match
+        O, # Cardmember Name and Billing Address match
+        E, # Cardmember Name incorrect, Billing Address and Postal Code match
+        F  # Cardmember Name incorrect, Billing Address matches
+      ]
+
+      AMEX_ZIPCODE_MATCH_CODES = [
+        Y, # Address and ZIP Match
+        Z, # 9 or 5 digit ZIP Matches, Address Does Not Match
+        L, # Cardmember Name and Billing Postal Code match
+        M, # Cardmember Name, Billing Address and Postal Code match
+        D, # Cardmember Name incorrect, Billing Postal Code matches
+        E  # Cardmember Name incorrect, Billing Address and Postal Code match
+      ]
+
+      AMEX_CUSTOMER_NAME_MATCH_CODES = [
+        L, # Cardmember Name and Billing Postal Code match
+        M, # Cardmember Name, Billing Address and Postal Code match
+        O  # Cardmember Name and Billing Address match
+      ]
+
+      AMEX_ADDRESS_MISMATCH_CODES = [
+        Z, # 9 or 5 digit ZIP Matches, Address Does Not Match
+        N, # Address and ZIP Do Not Match
+        W  # No, Cardmember Name, Billing Address and Postal Code are allincorrect
+      ]
+
+      AMEX_ZIPCODE_MISMATCH_CODES = [
+        A, # Address Matches ZIP Does Not Match
+        N, # Address and ZIP Do Not Match
+        W  # No, Cardmember Name, Billing Address and Postal Code are allincorrect
+      ]
+
+      AMEX_CUSTOMER_NAME_MISMATCH_CODES = [
+        D, # Cardmember Name incorrect, Billing Postal Code matches
+        E, # Cardmember Name incorrect, Billing Address and Postal Code match
+        F, # Cardmember Name incorrect, Billing Address matches
+        W  # No, Cardmember Name, Billing Address and Postal Code are allincorrect
+      ]
+
+      AMEX_ADDRESS_UNKNOWN_CODES = [
+        U, # Address Information Is Unavailable
+        S  # Issuer does not support address verification
+      ]
+
+      AMEX_ZIPCODE_UNKNOWN_CODES = [
+        U, # Address Information Is Unavailable
+        S  # Issuer does not support address verification
+      ]
+
+      DISCOVER_ADDRESS_MATCH_CODES = [
+        A  # Address matches, Zip Code does not
+      ]
+
+      DISCOVER_ZIPCODE_MATCH_CODES = [
+        X, # All digits match (9-digit Zip Code)
+        Y, # All digits match (5-digit Zip Code)
+        W, # 9-digit Zip matches, address does not
+        Z # 5-digit Zip matches, address does not
+      ]
+
+      DISCOVER_ADDRESS_MISMATCH_CODES = [
+        W, # 9-digit Zip matches, address does not
+        Z, # 5-digit Zip matches, address does not
+        N  # Nothing matches
+      ]
+
+      DISCOVER_ZIPCODE_MISMATCH_CODES = [
+        A, # Address matches, Zip Code does not
+        N  # Nothing matches
+      ]
+
+      DISCOVER_ADDRESS_UNKNOWN_CODES = [
+        U, # No Data from Issuer/Auth System
+        S, # AVS not supported at this time
+        G  # Address information not verified for international transaction
+      ]
+
+      DISCOVER_ZIPCODE_UNKNOWN_CODES = [
+        U, # No Data from Issuer/Auth System
+        S, # AVS not supported at this time
+        G  # Address information not verified for international transaction
+      ]
 
       attr_accessor :retref, :account, :token, :amount, :avsresp, :cvvresp, :authcode, :commcard, :profileid, :check_cvv, 
                     :card_type, :zip_match, :address_match, :customer_name_match, :check_avs
@@ -82,6 +253,16 @@ module CardConnectGateway
         errors.empty?
       end
 
+      def get_avs_response(match_codes, mis_match_codes, unknown_codes=[])
+        if match_codes.include?(avsresp)
+          AVS_SUCCESS
+        elsif mis_match_codes.include?(avsresp)
+          AVS_FAIL
+        elsif unknown_codes.include?(avsresp)
+          AVS_UNKNOWN
+        end
+      end
+
       def validate_avs_response
         # http://www.cardconnect.com/developer/docs/#address-verification-system
         # left empty if blocks in this function so it could easily be compared to the card connect documentation
@@ -90,163 +271,20 @@ module CardConnectGateway
         self.address_match = nil
         self.customer_name_match = nil
 
-        case avsresp 
-        when A
-          if card_type == DISCOVER
-            self.address_match = AVS_SUCCESS
-            self.zip_match = AVS_SUCCESS 
-          elsif card_type == MASTERCARD or card_type == AMEX
-            self.address_match = AVS_SUCCESS
-            self.zip_match = AVS_FAIL
-          end
-        when B 
-          if card_type == VISA 
-            self.address_match = AVS_SUCCESS
-            self.zip_match = AVS_FAIL # Postal code not verified due to incompatible formats.
-          end
-        when C 
-          if card_type == VISA 
-            # Street address and postal code not verified due to incompatible formats.
-            self.address_match = AVS_FAIL 
-            self.zip_match = AVS_FAIL 
-          end
-        when D 
-          if card_type == AMEX 
-            self.zip_match = AVS_SUCCESS 
-            self.customer_name_match = AVS_FAIL
-          elsif card_type == VISA
-            self.zip_match = AVS_SUCCESS
-            self.address_match = AVS_SUCCESS
-          end
-        when E 
-          if card_type == AMEX 
-            self.address_match = AVS_SUCCESS
-            self.zip_match = AVS_SUCCESS 
-            self.customer_name_match = AVS_FAIL
-          end
-        when F 
-          if card_type == AMEX 
-            self.address_match = AVS_SUCCESS
-            self.customer_name_match = AVS_FAIL
-          elsif card_type == VISA 
-            self.address_match = AVS_SUCCESS 
-            self.zip_match = AVS_SUCCESS
-          end
-        when G 
-          if card_type == VISA or card_type == DISCOVER
-            # Address information not verified for international transaction
-            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
-            #   so we have to allow it through
-            self.address_match = AVS_UNKNOWN 
-            self.zip_match = AVS_UNKNOWN
-          end
-        when I 
-          if card_type == VISA 
-            # Address information not verified
-            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
-            #   so we have to allow it through
-            self.address_match = AVS_UNKNOWN 
-            self.zip_match = AVS_UNKNOWN
-          end
-        when K 
-          if card_type == AMEX 
-            self.customer_name_match = AVS_SUCCESS 
-          end
-        when L 
-          if card_type == AMEX 
-            self.customer_name_match = AVS_SUCCESS
-            self.zip_match = AVS_SUCCESS
-          end
-        when M
-          if card_type == AMEX  or card_type == VISA 
-            self.address_match = AVS_SUCCESS
-            self.customer_name_match = AVS_SUCCESS
-            self.zip_match = AVS_SUCCESS
-          end
-        when N 
-          if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER or card_type == VISA
-            self.address_match = AVS_FAIL
-            self.customer_name_match = AVS_FAIL
-            self.zip_match = AVS_FAIL
-          end
-        when O 
-          if card_type == AMEX 
-            self.address_match = AVS_SUCCESS
-            self.customer_name_match = AVS_SUCCESS
-          end
-        when P 
-          if card_type == VISA 
-            # street address not verified due to incompatible formats
-            self.zip_match = AVS_SUCCESS
-          end
-        when R 
-          if card_type == MASTERCARD or card_type == AMEX
-            # System Unavailable; retry
-          end
-        when S 
-          if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER
-            # Issuer Does Not Support Address Verification
-            self.address_match = AVS_SUCCESS 
-            self.zip_match = AVS_SUCCESS
-          end
-        when T 
-          if card_type == DISCOVER 
-            self.zip_match = AVS_SUCCESS 
-            self.address_match = AVS_FAIL
-          end
-        when U 
-          if card_type == MASTERCARD or card_type == AMEX or card_type == DISCOVER or card_type == VISA
-            # Address Information Is Unavailable
-            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
-            #   so we have to allow it through
-
-            # added Visa to here too even though the card connect documentation says thats not a valid code. Their tech support said:
-            #   "It is not uncommon for an international issuer to respond with an avsresp of ‘U’.  
-            #   Not all issuing banks, especially international banks, honor AVS checks."
-            self.address_match = AVS_UNKNOWN 
-            self.zip_match = AVS_UNKNOWN
-          end
-        when W 
-          if card_type == DISCOVER 
-            # No data from Issuer/Authorization system
-            #   unfortunately this means that we can't verify the AVS (according to CardConnect tech support)
-            #   so we have to allow it through
-            self.address_match = AVS_SUCCESS 
-            self.zip_match = AVS_UNKNOWN
-          elsif card_type == AMEX
-            # No, Cardmember Name, Billing Address and Postal Code are all incorrect
-            self.address_match = AVS_FAIL
-            self.customer_name_match = AVS_FAIL
-            self.zip_match = AVS_FAIL
-          elsif card_type == MASTERCARD
-            self.zip_match = AVS_SUCCESS
-            self.address_match = AVS_FAIL
-          end
-        when X 
-          if card_type == DISCOVER 
-            self.zip_match = AVS_SUCCESS 
-          elsif card_type == MASTERCARD
-            self.zip_match = AVS_SUCCESS
-            self.address_match = AVS_SUCCESS
-          end
-        when Y 
-          if card_type == DISCOVER
-            self.address_match = AVS_SUCCESS
-            self.zip_match = AVS_FAIL
-          elsif card_type == VISA or card_type == MASTERCARD or card_type == AMEX
-            self.address_match = AVS_SUCCESS 
-            self.zip_match = AVS_SUCCESS
-          end
-        when Z 
-          if card_type == DISCOVER
-            self.address_match = AVS_FAIL
-            self.zip_match = AVS_SUCCESS
-          elsif card_type == VISA or card_type == MASTERCARD or card_type == AMEX
-            self.address_match = AVS_FAIL 
-            self.zip_match = AVS_SUCCESS
-          end
-        else
-          # UNKNOWN RESPONSE
+        case card_type
+        when VISA 
+          self.zip_match = get_avs_response(VISA_ZIPCODE_MATCH_CODES, VISA_ZIPCODE_MISMATCH_CODES, VISA_ZIPCODE_UNKNOWN_CODES)
+          self.address_match = get_avs_response(VISA_ADDRESS_MATCH_CODES, VISA_ADDRESS_MISMATCH_CODES, VISA_ADDRESS_UNKNOWN_CODES)
+        when AMEX
+          self.zip_match = get_avs_response(VISA_ZIPCODE_MATCH_CODES, VISA_ZIPCODE_MISMATCH_CODES, VISA_ZIPCODE_UNKNOWN_CODES)
+          self.address_match = get_avs_response(VISA_ADDRESS_MATCH_CODES, VISA_ADDRESS_MISMATCH_CODES, VISA_ADDRESS_UNKNOWN_CODES)
+          self.customer_name_match = get_avs_response(AMEX_CUSTOMER_NAME_MATCH_CODES, AMEX_CUSTOMER_NAME_MISMATCH_CODES)
+        when MASTERCARD
+          self.zip_match = get_avs_response(MASTERCARD_ZIPCODE_MATCH_CODES, MASTERCARD_ZIPCODE_MISMATCH_CODES, MASTERCARD_ZIPCODE_UNKNOWN_CODES)
+          self.address_match = get_avs_response(MASTERCARD_ADDRESS_MATCH_CODES, MASTERCARD_ADDRESS_MISMATCH_CODES, MASTERCARD_ADDRESS_UNKNOWN_CODES)
+        when DISCOVER
+          self.zip_match = get_avs_response(DISCOVER_ZIPCODE_MATCH_CODES, DISCOVER_ZIPCODE_MISMATCH_CODES, DISCOVER_ZIPCODE_UNKNOWN_CODES)
+          self.address_match = get_avs_response(DISCOVER_ADDRESS_MATCH_CODES, DISCOVER_ADDRESS_MISMATCH_CODES, DISCOVER_ADDRESS_UNKNOWN_CODES)
         end
       end
     end
