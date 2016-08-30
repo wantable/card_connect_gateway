@@ -486,7 +486,7 @@ describe "Authorization" do
       postal: VISA_AVS_MATCH_ZIP
     })
     response.valid?
-    expect(response.errors).to eq({})
+    expect(response.errors).to eq({}), response.inspect
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
@@ -533,7 +533,7 @@ describe "Authorization" do
       postal: VISA_AVS_MATCH_ZIP
     })
     response.valid?
-    expect(response.errors).to eq({})
+    expect(response.errors).to eq({}), response.inspect
 
     response = CardConnectGateway.authorization({
       account: VISA_APPROVAL_ACCOUNT,
