@@ -33,9 +33,11 @@ describe "Authorization" do
   end
 
   it 'fail validation' do
-    request = CardConnectGateway::Authorization::Request.new({tokenize: 'A', expiry: 'asdf'})
+    max_length = CardConnectGateway::Authorization::Request.attributes[:account][:maxLength]
+
+    request = CardConnectGateway::Authorization::Request.new({tokenize: 'A', expiry: 'asdf', account: (1..(max_length + 5)).to_a.join("")})
     expect(request.validate).to eq(false)
-    expect(request.errors[:account]).to eq(I18n.t(:is_required))
+    expect(request.errors[:account]).to eq(I18n.t(:cannot_be_longer_than, maxLength: max_length))
     expect(request.errors[:tokenize]).to eq(I18n.t(:must_be_one_of, options: CardConnectGateway::Authorization::Request.attributes[:tokenize][:options]))
     expect(request.errors[:expiry]).to eq(I18n.t(:doesnt_match_the_format))
   end
@@ -609,6 +611,23 @@ describe "Authorization" do
     })
     response.valid?
     expect(response.errors).to eq({})
+  end
 
+  it 'avs responses for customer name match required' do
+    CardConnectGateway.configure do |config|
+      config.require_avs_zip_code_match = false
+      config.require_avs_address_match = false
+      config.require_avs_customer_name_match = true
+    end
+
+    response = CardConnectGateway.authorization({
+      account: AMEX_APPROVAL_ACCOUNT,
+      expiry: EXPIRY,
+      profile: true,
+      cvv2: CVV_MATCH,
+      postal: VISA_AVS_MATCH_ZIP
+    })
+    response.valid?
+    expect(response.errors).to eq({name: "unknown error."})
   end
 end
