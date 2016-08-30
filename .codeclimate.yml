@@ -5,3 +5,5 @@ languages:
 exclude_paths:
 - "Gemfile.lock"
 - "test/*"
+- "vendor/*"
+- "spec/*"
