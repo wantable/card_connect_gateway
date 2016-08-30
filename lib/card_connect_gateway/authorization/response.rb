@@ -41,7 +41,7 @@ module CardConnectGateway
 
       VISA_ADDRESS_MATCH_CODES = [
         A, # Address matches, ZIP does not.
-        B, # Street addresses match. 
+        B, # Street addresses match. Postal code not verified due to incompatible formats. (Acquirer sent both street address and postal code).
         D, # Street addresses and postal codes match. 
         F, # Street addresses and postal codes match. UK Only
         M, # Street address and postal code match. 
@@ -52,7 +52,7 @@ module CardConnectGateway
         D, # Street addresses and postal codes match. 
         F, # Street addresses and postal codes match. UK Only
         M, # Street address and postal code match.
-        P, # Postal code match.
+        P, # Postal code match. Acquirer sent both postal code and street address, but street address not verified due to incompatible formats.
         W, # Not applicable. If present, replaced with “Z” by V.I.P. Available to U.S. issuers only
         X, # Not applicable. If present, replaced with ”Y” by V.I.P. Available for U.S. issuers only.
         Y, # Street address and postal code match.
@@ -67,7 +67,7 @@ module CardConnectGateway
 
       VISA_ZIPCODE_MISMATCH_CODES = [
         A, # Address matches, ZIP does not.
-        B, # Postal code not verified due to incompatible formats.
+        B, # Street addresses match. Postal code not verified due to incompatible formats. (Acquirer sent both street address and postal code).
         C, # Street address and postal code not verified due to incompatible formats.
         N  # No match.
       ]
@@ -75,7 +75,7 @@ module CardConnectGateway
       VISA_ADDRESS_UNKNOWN_CODES = [
         G, # Address information not verified for international transaction
         I, # Address information not verified,
-        P, # street address not verified due to incompatible formats.
+        P, # Postal code match. Acquirer sent both postal code and street address, but street address not verified due to incompatible formats.
         S, # Not applicable. If present, replaced with “U” for domestic, and “G” for international by V.I.P. Available for U.S. issuers only
         U  # Address not verified for domestic transaction.
       ]
